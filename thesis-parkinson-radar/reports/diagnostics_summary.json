@@ -1,0 +1,190 @@
+{
+  "per_subject": {
+    "n_correct": 38,
+    "n_total": 58,
+    "accuracy_at_0.5": 0.6551724137931034,
+    "misclassified": [
+      {
+        "subject_id": "fisp_045",
+        "group": "pd",
+        "subject_score": 0.15724124256665137
+      },
+      {
+        "subject_id": "fisp_052",
+        "group": "pd",
+        "subject_score": 0.16041379367708528
+      },
+      {
+        "subject_id": "fisp_044",
+        "group": "pd",
+        "subject_score": 0.2613859273818639
+      },
+      {
+        "subject_id": "fisp_048",
+        "group": "pd",
+        "subject_score": 0.2798308435920883
+      },
+      {
+        "subject_id": "fisp_051",
+        "group": "pd",
+        "subject_score": 0.3031523346397413
+      },
+      {
+        "subject_id": "fisp_049",
+        "group": "pd",
+        "subject_score": 0.37139800537469103
+      },
+      {
+        "subject_id": "fisp_041",
+        "group": "pd",
+        "subject_score": 0.3802799907487025
+      },
+      {
+        "subject_id": "fisp_014",
+        "group": "pd",
+        "subject_score": 0.4167857757076969
+      },
+      {
+        "subject_id": "fisp_012",
+        "group": "pd",
+        "subject_score": 0.45730700271658636
+      },
+      {
+        "subject_id": "fisc_033",
+        "group": "control",
+        "subject_score": 0.6144636734583308
+      },
+      {
+        "subject_id": "fisc_006",
+        "group": "control",
+        "subject_score": 0.66051069131434
+      },
+      {
+        "subject_id": "fisc_007",
+        "group": "control",
+        "subject_score": 0.6834007412040886
+      },
+      {
+        "subject_id": "fisc_005",
+        "group": "control",
+        "subject_score": 0.6886620059754308
+      },
+      {
+        "subject_id": "fisc_035",
+        "group": "control",
+        "subject_score": 0.7118558656992254
+      },
+      {
+        "subject_id": "fisc_014",
+        "group": "control",
+        "subject_score": 0.7155786048595298
+      },
+      {
+        "subject_id": "fisc_010",
+        "group": "control",
+        "subject_score": 0.741322451356937
+      },
+      {
+        "subject_id": "fisc_008",
+        "group": "control",
+        "subject_score": 0.7423716049729582
+      },
+      {
+        "subject_id": "fisc_020",
+        "group": "control",
+        "subject_score": 0.7609405881521996
+      },
+      {
+        "subject_id": "fisc_012",
+        "group": "control",
+        "subject_score": 0.7920380804088424
+      },
+      {
+        "subject_id": "fisc_016",
+        "group": "control",
+        "subject_score": 0.9658809691893796
+      }
+    ],
+    "controls_wrong": 11,
+    "pd_wrong": 9
+  },
+  "caliper_sweep": {
+    "sweep": [
+      {
+        "caliper_s": 0.25,
+        "n_trials": 254,
+        "n_subjects": 58,
+        "auc": 0.6133333333333333
+      },
+      {
+        "caliper_s": 0.5,
+        "n_trials": 266,
+        "n_subjects": 58,
+        "auc": 0.616969696969697
+      },
+      {
+        "caliper_s": 0.75,
+        "n_trials": 270,
+        "n_subjects": 58,
+        "auc": 0.6242424242424243
+      },
+      {
+        "caliper_s": 1.0,
+        "n_trials": 272,
+        "n_subjects": 58,
+        "auc": 0.6242424242424243
+      },
+      {
+        "caliper_s": 1.5,
+        "n_trials": 274,
+        "n_subjects": 58,
+        "auc": 0.6218181818181818
+      },
+      {
+        "caliper_s": 2.0,
+        "n_trials": 278,
+        "n_subjects": 58,
+        "auc": 0.6193939393939394
+      }
+    ],
+    "auc_range": [
+      0.6133333333333333,
+      0.6242424242424243
+    ]
+  },
+  "learning_curve": {
+    "curve": [
+      {
+        "n_train_subjects": 10,
+        "auc_mean": 0.5833039388594944,
+        "auc_std": 0.10964944105159893,
+        "n_valid_repeats": 30
+      },
+      {
+        "n_train_subjects": 20,
+        "auc_mean": 0.5878787878787878,
+        "auc_std": 0.07458827722660372,
+        "n_valid_repeats": 30
+      },
+      {
+        "n_train_subjects": 30,
+        "auc_mean": 0.6526041666666665,
+        "auc_std": 0.10102152935073348,
+        "n_valid_repeats": 30
+      },
+      {
+        "n_train_subjects": 40,
+        "auc_mean": 0.6416666666666667,
+        "auc_std": 0.10534335395373655,
+        "n_valid_repeats": 30
+      },
+      {
+        "n_train_subjects": 50,
+        "auc_mean": 0.717777777777778,
+        "auc_std": 0.1875244839981314,
+        "n_valid_repeats": 30
+      }
+    ],
+    "auc_gain_10_to_50": 0.13447383891828357
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "class_balance": {
+    "n_subjects": 58,
+    "subjects_per_group": {
+      "control": 33,
+      "pd": 25
+    },
+    "n_trials": 348,
+    "trials_per_subject": {
+      "6": 56,
+      "7": 1,
+      "5": 1
+    }
+  },
+  "duration_confound": {
+    "test1": {
+      "pct_gap": 10.078292381932357,
+      "mwu_p": 0.00164802987296353,
+      "cliffs_delta": 0.2780435938330674
+    },
+    "test2": {
+      "pct_gap": 3.4424167038559776,
+      "mwu_p": 0.14123755283040765,
+      "cliffs_delta": 0.131040131040131
+    }
+  },
+  "group_comparison": {
+    "n_features_tested": 25,
+    "n_significant_fdr": 24,
+    "top5_by_effect": [
+      {
+        "feature": "torso_torso_band_energy",
+        "cliffs_delta": 0.4608754208754209,
+        "effect": "medium",
+        "p_fdr": 4.482351577356325e-12
+      },
+      {
+        "feature": "foot_total_energy",
+        "cliffs_delta": 0.45225589225589236,
+        "effect": "medium",
+        "p_fdr": 6.2330305647310936e-12
+      },
+      {
+        "feature": "torso_total_energy",
+        "cliffs_delta": 0.44080808080808076,
+        "effect": "medium",
+        "p_fdr": 1.5706414361799453e-11
+      },
+      {
+        "feature": "foot_foot_band_energy",
+        "cliffs_delta": 0.4306397306397307,
+        "effect": "medium",
+        "p_fdr": 3.733371402644495e-11
+      },
+      {
+        "feature": "foot_torso_band_energy",
+        "cliffs_delta": 0.4225589225589226,
+        "effect": "medium",
+        "p_fdr": 7.333066838368583e-11
+      }
+    ]
+  },
+  "top_distributions": {
+    "shown": [
+      "torso_bandwidth_hz",
+      "foot_std",
+      "foot_env_cv",
+      "torso_entropy",
+      "torso_centroid_hz",
+      "foot_bandwidth_hz"
+    ]
+  },
+  "correlation_audit": {
+    "features_corr_duration_gt_0.3": {
+      "foot_torso_band_energy": 0.748,
+      "torso_std": -0.654,
+      "torso_torso_band_energy": 0.646,
+      "torso_foot_to_torso_band_ratio": -0.496,
+      "foot_mean": -0.419,
+      "torso_mean": -0.395,
+      "foot_foot_to_torso_band_ratio": -0.374,
+      "torso_env_cv": 0.324,
+      "foot_entropy": -0.317
+    },
+    "max_abs_corr_invariant": 0.654
+  },
+  "pca": {
+    "pc1_var": 0.6207105502658151,
+    "pc2_var": 0.11172804716784157,
+    "n_pc_for_90pct": 5
+  }
+}

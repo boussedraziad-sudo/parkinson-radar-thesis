@@ -1,0 +1,29 @@
+# Data — never commit
+data
+*.mat
+*.npy
+*.npz
+outputs/preprocessed/
+outputs/models/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Envs
+.env
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp

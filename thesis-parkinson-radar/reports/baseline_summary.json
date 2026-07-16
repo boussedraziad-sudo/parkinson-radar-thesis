@@ -1,0 +1,378 @@
+{
+  "feature_sets": {
+    "all_features": [
+      "foot_mean",
+      "foot_max",
+      "foot_std",
+      "foot_centroid_hz",
+      "foot_bandwidth_hz",
+      "foot_entropy",
+      "foot_foot_to_torso_band_ratio",
+      "torso_mean",
+      "torso_max",
+      "torso_std",
+      "torso_centroid_hz",
+      "torso_bandwidth_hz",
+      "torso_entropy",
+      "torso_foot_to_torso_band_ratio",
+      "foot_torso_total_ratio",
+      "foot_env_cv",
+      "torso_env_cv",
+      "foot_total_energy",
+      "torso_total_energy",
+      "foot_torso_band_energy",
+      "foot_foot_band_energy",
+      "torso_torso_band_energy",
+      "torso_foot_band_energy",
+      "foot_env_std",
+      "torso_env_std"
+    ],
+    "duration_invariant": [
+      "foot_mean",
+      "foot_max",
+      "foot_std",
+      "foot_centroid_hz",
+      "foot_bandwidth_hz",
+      "foot_entropy",
+      "foot_foot_to_torso_band_ratio",
+      "torso_mean",
+      "torso_max",
+      "torso_std",
+      "torso_centroid_hz",
+      "torso_bandwidth_hz",
+      "torso_entropy",
+      "torso_foot_to_torso_band_ratio",
+      "foot_torso_total_ratio",
+      "foot_env_cv",
+      "torso_env_cv"
+    ],
+    "shape_clean": [
+      "foot_max",
+      "foot_std",
+      "foot_centroid_hz",
+      "foot_bandwidth_hz",
+      "torso_max",
+      "torso_centroid_hz",
+      "torso_bandwidth_hz",
+      "torso_entropy",
+      "foot_torso_total_ratio",
+      "foot_env_cv"
+    ],
+    "confounded_only": [
+      "foot_total_energy",
+      "torso_total_energy",
+      "foot_torso_band_energy",
+      "foot_foot_band_energy",
+      "torso_torso_band_energy",
+      "torso_foot_band_energy",
+      "foot_env_std",
+      "torso_env_std"
+    ],
+    "duration_only": [
+      "duration_s"
+    ]
+  },
+  "results": {
+    "logreg|all_features": {
+      "auc": 0.6327272727272727,
+      "auc_lo": 0.48609775641025643,
+      "auc_hi": 0.7842442067736185,
+      "balanced_acc": 0.6181818181818182,
+      "f1": 0.5769230769230769,
+      "sensitivity": 0.6,
+      "specificity": 0.6363636363636364,
+      "confusion": [
+        [
+          21,
+          12
+        ],
+        [
+          10,
+          15
+        ]
+      ]
+    },
+    "svm_rbf|all_features": {
+      "auc": 0.623030303030303,
+      "auc_lo": 0.4806262911998017,
+      "auc_hi": 0.7730216612124043,
+      "balanced_acc": 0.6133333333333333,
+      "f1": 0.56,
+      "sensitivity": 0.56,
+      "specificity": 0.6666666666666666,
+      "confusion": [
+        [
+          22,
+          11
+        ],
+        [
+          11,
+          14
+        ]
+      ]
+    },
+    "random_forest|all_features": {
+      "auc": 0.6054545454545455,
+      "auc_lo": 0.453522465437788,
+      "auc_hi": 0.755154714850367,
+      "balanced_acc": 0.6236363636363637,
+      "f1": 0.5531914893617021,
+      "sensitivity": 0.52,
+      "specificity": 0.7272727272727273,
+      "confusion": [
+        [
+          24,
+          9
+        ],
+        [
+          12,
+          13
+        ]
+      ]
+    },
+    "logreg|duration_invariant": {
+      "auc": 0.6266666666666667,
+      "auc_lo": 0.4821389751552794,
+      "auc_hi": 0.7776724419745014,
+      "balanced_acc": 0.623030303030303,
+      "f1": 0.5925925925925926,
+      "sensitivity": 0.64,
+      "specificity": 0.6060606060606061,
+      "confusion": [
+        [
+          20,
+          13
+        ],
+        [
+          9,
+          16
+        ]
+      ]
+    },
+    "svm_rbf|duration_invariant": {
+      "auc": 0.6012121212121212,
+      "auc_lo": 0.4532709487346584,
+      "auc_hi": 0.7579057017543859,
+      "balanced_acc": 0.6333333333333333,
+      "f1": 0.5882352941176471,
+      "sensitivity": 0.6,
+      "specificity": 0.6666666666666666,
+      "confusion": [
+        [
+          22,
+          11
+        ],
+        [
+          10,
+          15
+        ]
+      ]
+    },
+    "random_forest|duration_invariant": {
+      "auc": 0.6012121212121213,
+      "auc_lo": 0.449154601029601,
+      "auc_hi": 0.7575946969696968,
+      "balanced_acc": 0.6036363636363636,
+      "f1": 0.5217391304347826,
+      "sensitivity": 0.48,
+      "specificity": 0.7272727272727273,
+      "confusion": [
+        [
+          24,
+          9
+        ],
+        [
+          13,
+          12
+        ]
+      ]
+    },
+    "logreg|shape_clean": {
+      "auc": 0.6206060606060606,
+      "auc_lo": 0.4732205377196459,
+      "auc_hi": 0.7696691176470585,
+      "balanced_acc": 0.6533333333333333,
+      "f1": 0.6153846153846154,
+      "sensitivity": 0.64,
+      "specificity": 0.6666666666666666,
+      "confusion": [
+        [
+          22,
+          11
+        ],
+        [
+          9,
+          16
+        ]
+      ]
+    },
+    "svm_rbf|shape_clean": {
+      "auc": 0.576969696969697,
+      "auc_lo": 0.4255050505050505,
+      "auc_hi": 0.7387498375779625,
+      "balanced_acc": 0.6333333333333333,
+      "f1": 0.5882352941176471,
+      "sensitivity": 0.6,
+      "specificity": 0.6666666666666666,
+      "confusion": [
+        [
+          22,
+          11
+        ],
+        [
+          10,
+          15
+        ]
+      ]
+    },
+    "random_forest|shape_clean": {
+      "auc": 0.583030303030303,
+      "auc_lo": 0.42666308243727596,
+      "auc_hi": 0.7451753539253538,
+      "balanced_acc": 0.6436363636363637,
+      "f1": 0.5833333333333334,
+      "sensitivity": 0.56,
+      "specificity": 0.7272727272727273,
+      "confusion": [
+        [
+          24,
+          9
+        ],
+        [
+          11,
+          14
+        ]
+      ]
+    },
+    "logreg|confounded_only": {
+      "auc": 0.6751515151515152,
+      "auc_lo": 0.5267460755282174,
+      "auc_hi": 0.8133346203346203,
+      "balanced_acc": 0.5981818181818181,
+      "f1": 0.5490196078431373,
+      "sensitivity": 0.56,
+      "specificity": 0.6363636363636364,
+      "confusion": [
+        [
+          21,
+          12
+        ],
+        [
+          11,
+          14
+        ]
+      ]
+    },
+    "svm_rbf|confounded_only": {
+      "auc": 0.6339393939393939,
+      "auc_lo": 0.4835618491868492,
+      "auc_hi": 0.7833413461538461,
+      "balanced_acc": 0.5781818181818181,
+      "f1": 0.52,
+      "sensitivity": 0.52,
+      "specificity": 0.6363636363636364,
+      "confusion": [
+        [
+          21,
+          12
+        ],
+        [
+          12,
+          13
+        ]
+      ]
+    },
+    "random_forest|confounded_only": {
+      "auc": 0.6175757575757576,
+      "auc_lo": 0.46091346512843495,
+      "auc_hi": 0.7666756272401432,
+      "balanced_acc": 0.6484848484848484,
+      "f1": 0.6,
+      "sensitivity": 0.6,
+      "specificity": 0.696969696969697,
+      "confusion": [
+        [
+          23,
+          10
+        ],
+        [
+          10,
+          15
+        ]
+      ]
+    },
+    "logreg|duration_only": {
+      "auc": 0.6096969696969697,
+      "auc_lo": 0.45431743421052634,
+      "auc_hi": 0.7479091995221027,
+      "balanced_acc": 0.5484848484848486,
+      "f1": 0.4444444444444444,
+      "sensitivity": 0.4,
+      "specificity": 0.696969696969697,
+      "confusion": [
+        [
+          23,
+          10
+        ],
+        [
+          15,
+          10
+        ]
+      ]
+    },
+    "svm_rbf|duration_only": {
+      "auc": 0.2872727272727273,
+      "auc_lo": 0.15685396022208167,
+      "auc_hi": 0.43337622549019583,
+      "balanced_acc": 0.4090909090909091,
+      "f1": 0.0,
+      "sensitivity": 0.0,
+      "specificity": 0.8181818181818182,
+      "confusion": [
+        [
+          27,
+          6
+        ],
+        [
+          25,
+          0
+        ]
+      ]
+    },
+    "random_forest|duration_only": {
+      "auc": 0.4503030303030303,
+      "auc_lo": 0.30180113636363637,
+      "auc_hi": 0.6117996903153152,
+      "balanced_acc": 0.5036363636363637,
+      "f1": 0.34146341463414637,
+      "sensitivity": 0.28,
+      "specificity": 0.7272727272727273,
+      "confusion": [
+        [
+          24,
+          9
+        ],
+        [
+          18,
+          7
+        ]
+      ]
+    }
+  },
+  "permutation": {
+    "model": "logreg|shape_clean",
+    "observed_auc": 0.6206060606060606,
+    "p_value": 0.0919080919080919,
+    "n": 1000
+  },
+  "best": {
+    "config": "logreg|confounded_only",
+    "auc": 0.6751515151515152,
+    "auc_ci": [
+      0.5267460755282174,
+      0.8133346203346203
+    ],
+    "sensitivity": 0.56,
+    "specificity": 0.6363636363636364
+  }
+}

@@ -1,0 +1,32 @@
+# ── Raw clinical radar dataset — NEVER commit ──
+# Huge (106 GB) and data-protection: clinical data under ethics approval PD-RADAR-05/2024.
+shared_ziad/
+thesis-parkinson-radar/data
+thesis-parkinson-radar/data/
+
+# ── Python virtual environments (regenerable via pip install) ──
+.venv/
+venv/
+env/
+
+# ── Python caches / build ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ── Cloned third-party skills repo (has its own git history, re-clonable) ──
+academic-research-skills/
+
+# ── Claude Code tooling (editor config + copied third-party skills, not thesis content) ──
+.claude/
+
+# ── OS / editor cruft ──
+.DS_Store
+Thumbs.db
+*.swp
+
+# ── Secrets / local env ──
+.env
+*.env
