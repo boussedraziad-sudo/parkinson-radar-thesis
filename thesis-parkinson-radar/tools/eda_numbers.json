@@ -1,0 +1,68 @@
+{
+  "n_subj": 58,
+  "n_ctrl": 33,
+  "n_pd": 25,
+  "n_trials": 348,
+  "dur": {
+    "count": 348.0,
+    "mean": 9.47,
+    "std": 2.49,
+    "min": 5.8,
+    "25%": 7.77,
+    "50%": 8.91,
+    "75%": 10.44,
+    "max": 19.2
+  },
+  "dur_test1": {
+    "ctrl_med": 9.17,
+    "pd_med": 10.094,
+    "pct": 10.1,
+    "p": 0.00164802987296353,
+    "delta": 0.278
+  },
+  "dur_test2": {
+    "ctrl_med": 8.035,
+    "pd_med": 8.312,
+    "pct": 3.4,
+    "p": 0.14123755283040765,
+    "delta": 0.131
+  },
+  "n_feat": 32,
+  "n_conf": 8,
+  "n_inv": 17,
+  "n_sig": 24,
+  "n_tested": 25,
+  "max_delta": 0.461,
+  "perm_resid": {
+    "model": "logreg|shape_clean|duration-residualized",
+    "observed_auc": 0.6763636363636364,
+    "p_value": 0.02197802197802198,
+    "n": 1000
+  },
+  "batch_auc": [
+    {
+      "set": "all_features",
+      "pooled": 0.6327272727272727,
+      "batch A": 0.6041666666666667,
+      "batch B": 0.4666666666666667
+    },
+    {
+      "set": "duration_invariant",
+      "pooled": 0.6266666666666667,
+      "batch A": 0.5666666666666668,
+      "batch B": 0.4962962962962962
+    },
+    {
+      "set": "shape_clean",
+      "pooled": 0.6206060606060606,
+      "batch A": 0.5375,
+      "batch B": 0.5407407407407407
+    },
+    {
+      "set": "duration_only",
+      "pooled": 0.6096969696969697,
+      "batch A": 0.6416666666666667,
+      "batch B": 0.6592592592592593
+    }
+  ]
+}

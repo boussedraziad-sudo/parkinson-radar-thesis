@@ -14,7 +14,12 @@ from torchvision import models
 
 
 class SmallCNN(nn.Module):
-    """3-block CNN with global-average pooling. ~50k parameters."""
+    """3-block CNN with global-average pooling. 23,682 parameters at hidden=64.
+
+    Deliberately small: with 58 subjects a high-capacity network memorises the
+    cohort, and global-average pooling removes the large fully-connected layer
+    that would otherwise dominate the parameter count.
+    """
 
     def __init__(self, in_channels: int = 2, num_classes: int = 2, hidden: int = 64):
         super().__init__()
@@ -41,15 +46,24 @@ def resnet18_finetune(
     in_channels: int = 2,
     num_classes: int = 2,
     pretrained: bool = True,
-    freeze_until: str | None = "layer3",
+    freeze_until: str | None = "layer4",
 ) -> nn.Module:
     """
     ResNet-18 adapted to `in_channels` input and a binary head.
 
     If pretrained weights are loaded and in_channels != 3, conv1's weights are
-    averaged across the original 3 ImageNet channels and tiled. `freeze_until`
-    freezes all layers up to and including the named block (use None to
-    fine-tune everything; "layer3" leaves only layer4 + fc trainable).
+    averaged across the original 3 ImageNet channels and tiled, which preserves
+    the learned edge detectors instead of reinitialising them.
+
+    `freeze_until` freezes every block up to and including the named one:
+
+        "layer4"  ->      1,026 trainable  (linear probe on frozen features)
+        "layer3"  ->  8,394,754 trainable  (layer4 + fc)
+        None      -> 11,174,402 trainable  (everything)
+
+    The default is "layer4". With 58 subjects and ~1,400 training windows,
+    8.4 M trainable parameters overfit immediately; the deeper unfreezing is
+    reported as an ablation rather than used as the headline configuration.
     """
     weights = models.ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
     net = models.resnet18(weights=weights)

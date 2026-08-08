@@ -46,24 +46,51 @@ def _spectral_stats(spec: np.ndarray, abs_d: np.ndarray) -> dict[str, float]:
     }
 
 
-def _band_means(spec: np.ndarray, abs_d: np.ndarray) -> dict[str, float]:
-    """Mean spectrogram value in the torso and foot Doppler bands."""
+def _band_means(spec: np.ndarray, abs_d: np.ndarray,
+                include_energy: bool = True) -> dict[str, float]:
+    """
+    Band-limited descriptors for the torso and foot Doppler bands.
+
+    Means and the mean-ratio are duration-invariant. The ``*_band_energy`` sums
+    are NOT: they grow with the number of time bins, i.e. with trial length.
+    They are emitted only when ``include_energy`` is True, and exist purely so
+    the duration confound can be *demonstrated* (see
+    ``config.DURATION_CONFOUNDED_FEATURES``). Never treat them as gait features.
+    """
     torso_mask = (abs_d >= P.TORSO_BAND_HZ[0]) & (abs_d < P.TORSO_BAND_HZ[1])
     foot_mask = (abs_d >= P.FOOT_BAND_HZ[0]) & (abs_d < P.FOOT_BAND_HZ[1])
     mean_torso = float(spec[torso_mask].mean()) if torso_mask.any() else 0.0
     mean_foot = float(spec[foot_mask].mean()) if foot_mask.any() else 0.0
-    denom = mean_torso + mean_foot
-    return {
+    sum_torso = float(spec[torso_mask].sum()) if torso_mask.any() else 0.0
+    sum_foot = float(spec[foot_mask].sum()) if foot_mask.any() else 0.0
+
+    # CANONICAL band ratio: share of band-limited ENERGY falling in the foot band.
+    # Duration-invariant (numerator and denominator both scale with trial length),
+    # but note it is weighted by band width: the foot band spans 120 Doppler bins
+    # against the torso band's 80, so a wider band contributes more.
+    # This is the definition used to produce every published result.
+    den_e = sum_foot + sum_torso
+    out = {
         "torso_band_mean": mean_torso,
         "foot_band_mean": mean_foot,
-        "foot_to_torso_band_ratio": mean_foot / denom if denom > 0 else 0.0,
+        "foot_to_torso_band_ratio": sum_foot / den_e if den_e > 0 else 0.0,
+        # Bandwidth-normalised alternative: per-bin spectral density share, so it
+        # does not depend on how wide the two bands were drawn. Kept for
+        # comparison; not used in the published feature sets.
+        "foot_to_torso_band_ratio_dens":
+            mean_foot / (mean_foot + mean_torso) if (mean_foot + mean_torso) > 0 else 0.0,
     }
+    if include_energy:
+        out["torso_band_energy"] = sum_torso
+        out["foot_band_energy"] = sum_foot
+    return out
 
 
 def per_window_features(
     foot: np.ndarray,
     torso: np.ndarray,
     doppler_axis: np.ndarray,
+    include_energy: bool = True,
 ) -> dict[str, float]:
     """
     Build a flat dict of features for one window or one whole trial.
@@ -90,17 +117,30 @@ def per_window_features(
     for name, spec in (("foot", foot), ("torso", torso)):
         for k, v in _spectral_stats(spec, abs_d).items():
             out[f"{name}_{k}"] = v
-        for k, v in _band_means(spec, abs_d).items():
+        for k, v in _band_means(spec, abs_d, include_energy=include_energy).items():
             out[f"{name}_{k}"] = v
+        if include_energy:
+            # Duration-CONFOUNDED: a sum over time bins scales with trial length.
+            out[f"{name}_total_energy"] = float(spec.sum())
 
     # Cross-channel mean ratio (duration-invariant)
     out["foot_torso_mean_ratio"] = out["foot_mean"] / (out["torso_mean"] + 1e-12)
 
-    # Temporal envelope coefficient of variation — gait rhythmicity proxy.
-    # std/mean cancels duration, so this stays clean.
+    # Temporal envelope statistics.
+    #   env_cv = std/mean  -> duration-invariant (gait rhythmicity proxy)
+    #   env_std            -> duration-CONFOUNDED (scale grows with energy)
     for name, spec in (("foot", foot), ("torso", torso)):
         env = spec.sum(axis=0)  # (time,)
         out[f"{name}_env_cv"] = float(env.std() / (env.mean() + 1e-12))
+        if include_energy:
+            out[f"{name}_env_std"] = float(env.std())
+
+    if include_energy:
+        # Cross-channel energy ratio. Both numerator and denominator scale with
+        # duration so the ratio is *mostly* invariant, but it is retained in the
+        # confounded group because the cached table treated it that way.
+        out["foot_torso_total_ratio"] = (
+            out["foot_total_energy"] / (out["torso_total_energy"] + 1e-12))
 
     return out
 
