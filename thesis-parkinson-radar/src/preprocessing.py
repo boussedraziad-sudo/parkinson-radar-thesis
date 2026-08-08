@@ -98,7 +98,13 @@ def positive_energy_fraction(win: np.ndarray, doppler: np.ndarray) -> float:
     d = np.asarray(doppler, dtype=float).ravel()
     if d.size != win.shape[0]:
         return float("nan")
-    e = np.abs(win).sum(axis=1)
+    e = np.maximum(np.asarray(win, dtype=float), 0.0)
+    # The contrast-enhanced arrays carry a per-recording background floor that
+    # is direction-agnostic, so summing raw magnitude drags every window's
+    # fraction toward 0.5 and dilutes the turn label. Remove each Doppler bin's
+    # median over time (the stationary background) before comparing halves.
+    e = np.maximum(e - np.median(e, axis=1, keepdims=True), 0.0)
+    e = e.sum(axis=1)
     tot = float(e.sum())
     return float(e[d > 0].sum() / tot) if tot > 0 else float("nan")
 
@@ -109,7 +115,11 @@ def resize_2d(arr: np.ndarray, out_hw: tuple[int, int]) -> np.ndarray:
     import torch.nn.functional as F
 
     t = torch.from_numpy(arr.astype(np.float32))[None, None]  # (1, 1, H, W)
-    out = F.interpolate(t, size=out_hw, mode="bilinear", align_corners=False)
+    # The time axis is downsampled ~21x; without an anti-aliasing prefilter,
+    # bilinear sampling turns the spiky foot band into phase-dependent noise
+    # that differs between two windows of the same walk.
+    out = F.interpolate(t, size=out_hw, mode="bilinear", align_corners=False,
+                        antialias=True)
     return out.squeeze().numpy()
 
 

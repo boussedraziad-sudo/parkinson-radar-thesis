@@ -84,10 +84,27 @@ def resnet18_finetune(
         block_order = ["conv1", "bn1", "layer1", "layer2", "layer3", "layer4"]
         if freeze_until in block_order:
             idx = block_order.index(freeze_until)
-            for name in block_order[: idx + 1]:
-                mod = getattr(net, name)
+            frozen = [getattr(net, name) for name in block_order[: idx + 1]]
+            for mod in frozen:
                 for p in mod.parameters():
                     p.requires_grad = False
+                mod.eval()
+
+            # requires_grad=False does NOT freeze BatchNorm: in train() mode the
+            # frozen blocks would still normalise with per-batch statistics and
+            # keep updating running_mean/var, so the "frozen" features drift and
+            # train/eval see different feature maps. Pin the frozen blocks to
+            # eval mode across every train() call so the probe sees one, fixed,
+            # deterministic feature extractor.
+            _orig_train = net.train
+
+            def _train(mode: bool = True):
+                _orig_train(mode)
+                for mod in frozen:
+                    mod.eval()
+                return net
+
+            net.train = _train
     return net
 
 
@@ -95,3 +112,24 @@ def count_parameters(model: nn.Module) -> dict[str, int]:
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     return {"total": total, "trainable": trainable}
+
+
+class EnvelopeLSTM(nn.Module):
+    """Bidirectional LSTM over Doppler velocity-envelope curves. ~35k parameters.
+
+    The literature's most trustworthy result (Hayashi/Saho: envelope-LSTM,
+    judged more reliable than their own higher-scoring spectrogram CNN, which
+    was later shown to ride a site artifact). Input is (B, C, T): C velocity
+    curves per window rather than a 2-D image, so the model sees gait dynamics
+    with the per-recording image texture, and any artifact living in it,
+    already stripped away.
+    """
+
+    def __init__(self, in_channels: int = 3, hidden: int = 64, num_classes: int = 2):
+        super().__init__()
+        self.lstm = nn.LSTM(in_channels, hidden, batch_first=True, bidirectional=True)
+        self.head = nn.Sequential(nn.Dropout(0.3), nn.Linear(2 * hidden, num_classes))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        out, _ = self.lstm(x.transpose(1, 2))    # (B, C, T) -> (B, T, 2h)
+        return self.head(out.mean(dim=1))

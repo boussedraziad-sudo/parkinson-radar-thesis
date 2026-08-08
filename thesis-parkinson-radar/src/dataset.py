@@ -29,8 +29,9 @@ class WindowDataset(Dataset):
         augment: bool = False,
         channel_mode: str = "both",
         norm_stats: np.ndarray | None = None,
-        aug_time_flip: bool = True,
-        aug_noise_std: float = 0.02,
+        aug_doppler_flip: bool = True,
+        aug_noise_std: float = 0.10,
+        aug_mask_frac: float = 0.15,
         rng_seed: int | None = None,
         max_turn_frac: float | None = None,
     ):
@@ -50,8 +51,9 @@ class WindowDataset(Dataset):
         self.augment = augment
         self.channel_mode = channel_mode
         self.norm_stats = None if norm_stats is None else np.asarray(norm_stats, np.float32)
-        self.aug_time_flip = aug_time_flip
+        self.aug_doppler_flip = aug_doppler_flip
         self.aug_noise_std = float(aug_noise_std)
+        self.aug_mask_frac = float(aug_mask_frac)
         self._rng = np.random.default_rng(rng_seed)
 
         df = manifest
@@ -97,17 +99,34 @@ class WindowDataset(Dataset):
         return out
 
     def _augment(self, arr: np.ndarray) -> np.ndarray:
-        """Time reversal plus mild additive noise.
+        """Doppler-axis flip, additive noise, and time/frequency masking.
 
-        Reversing time turns a walk away from the node into a walk towards it,
-        which is a real thing a subject does twice per recording, so it is
-        label-preserving here. It is a flag rather than a constant because it
-        also destroys any asymmetry between the outward and return passes.
+        The flip is on the DOPPLER axis, not the time axis: negating Doppler
+        turns a walk away from the node into the same walk towards it, which
+        every subject performs twice per recording, so it is label-preserving
+        and physically real. Reversing time instead (the earlier version) plays
+        the stride backwards, an accelerate-then-brake pattern no walker
+        produces; the review flagged it as the wrong axis and it is gone.
+
+        Masking is SpecAugment-style: one span of time columns and one span of
+        Doppler rows are zeroed at random. On fold-standardised data zero is
+        the mean, so a mask reads as "signal absent", forcing the network to
+        use more than one region of the picture.
         """
-        if self.aug_time_flip and self._rng.random() < 0.5:
-            arr = arr[..., ::-1].copy()
+        if self.aug_doppler_flip and self._rng.random() < 0.5:
+            arr = arr[:, ::-1, :].copy() if arr.ndim == 3 else arr[::-1, :].copy()
         if self.aug_noise_std > 0 and self._rng.random() < 0.7:
             arr = arr + self._rng.normal(0.0, self.aug_noise_std, arr.shape).astype(np.float32)
+        if self.aug_mask_frac > 0 and self._rng.random() < 0.5:
+            w = arr.shape[-1]
+            span = int(self._rng.integers(1, max(2, int(w * self.aug_mask_frac))))
+            x0 = int(self._rng.integers(0, w - span))
+            arr[..., x0:x0 + span] = 0.0
+        if self.aug_mask_frac > 0 and self._rng.random() < 0.5:
+            h = arr.shape[-2]
+            span = int(self._rng.integers(1, max(2, int(h * self.aug_mask_frac))))
+            y0 = int(self._rng.integers(0, h - span))
+            arr[..., y0:y0 + span, :] = 0.0
         return arr
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, int, float]:

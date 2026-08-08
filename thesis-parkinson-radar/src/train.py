@@ -30,6 +30,7 @@ import dataclasses
 import json
 import random
 import time
+import zlib
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -63,8 +64,9 @@ class TrainConfig:
     inner_val_subjects: int = 8
     channel_mode: str = "both"
     augment_train: bool = True
-    aug_time_flip: bool = True
-    aug_noise_std: float = 0.02
+    aug_doppler_flip: bool = True     # Doppler-axis flip (was: time flip, wrong axis)
+    aug_noise_std: float = 0.10       # 0.02 on unit-variance data was a no-op
+    aug_mask_frac: float = 0.15       # SpecAugment-style time/Doppler masking
     class_balance: bool = True       # counter the 57/43 label imbalance
     window_weighting: bool = True    # counter the window-count confound
     max_turn_frac: float | None = None   # None keeps every window
@@ -166,6 +168,22 @@ def _eval_loader(model: nn.Module, loader: DataLoader, device: str) -> tuple[lis
     return probs, labels
 
 
+def subject_level_auc(ds: WindowDataset, probs: Sequence[float]) -> float:
+    """AUC over per-subject MEAN window probabilities.
+
+    Early stopping previously compared epochs on the pooled window-level AUC,
+    which weights each subject by their window count. PD subjects contribute
+    ~14 % more windows, so checkpoint selection was quietly rewarding the same
+    duration channel the training weights neutralise, and it was misaligned
+    with the reported metric. Scoring the validation set exactly the way test
+    subjects are scored fixes both at once. Uses inner-validation data only.
+    """
+    df = ds.manifest[["subject_id", "label"]].copy()
+    df["prob"] = list(probs)
+    per = df.groupby("subject_id").agg(label=("label", "first"), prob=("prob", "mean"))
+    return float(roc_auc_score(per["label"], per["prob"]))
+
+
 def _loader(ds: WindowDataset, cfg: TrainConfig, *, shuffle: bool) -> DataLoader:
     return DataLoader(
         ds, batch_size=cfg.batch_size, shuffle=shuffle,
@@ -176,12 +194,17 @@ def _loader(ds: WindowDataset, cfg: TrainConfig, *, shuffle: bool) -> DataLoader
 
 
 def _class_weights(ds: WindowDataset, device: str) -> torch.Tensor | None:
+    # Balance the classes by their EFFECTIVE (sample-weighted) mass, not the raw
+    # window counts: the inverse-count weights already change how much each
+    # window contributes, and computing class balance on raw counts would tilt
+    # the loss against whichever class has longer recordings.
     y = ds.manifest["label"].to_numpy()
-    n_pos, n_neg = int((y == 1).sum()), int((y == 0).sum())
-    if n_pos == 0 or n_neg == 0:
+    sw = ds.sample_weights
+    m_pos, m_neg = float(sw[y == 1].sum()), float(sw[y == 0].sum())
+    if m_pos <= 0 or m_neg <= 0:
         return None
-    total = n_pos + n_neg
-    w = torch.tensor([total / (2 * n_neg), total / (2 * n_pos)], dtype=torch.float32)
+    total = m_pos + m_neg
+    w = torch.tensor([total / (2 * m_neg), total / (2 * m_pos)], dtype=torch.float32)
     return w.to(device)
 
 
@@ -233,8 +256,8 @@ def train_one_fold(
             seen += xb.size(0)
         train_loss = running / max(seen, 1)
 
-        probs, labels = _eval_loader(model, va, device)
-        auc = roc_auc_score(labels, probs)   # both classes guaranteed present
+        probs, _ = _eval_loader(model, va, device)
+        auc = subject_level_auc(val_ds, probs)   # both classes guaranteed present
         history.append({"epoch": epoch, "train_loss": train_loss, "val_auc": auc})
         if verbose:
             print(f"      epoch {epoch:02d}  loss={train_loss:.4f}  val_auc={auc:.3f}")
@@ -294,10 +317,13 @@ def loso_cv(
 
     records: list[dict] = []
     for i, held_out in enumerate(todo):
-        set_seed(cfg.seed + i)                      # reproducible, distinct per fold
+        # Key the fold seed to the SUBJECT, not the loop index, so re-running a
+        # subset of subjects reproduces the identical folds.
+        fold_seed = cfg.seed + zlib.crc32(held_out.encode()) % 100_000
+        set_seed(fold_seed)
         pool = [s for s in all_subjects if s != held_out]
         inner_train, inner_val = make_inner_split(
-            pool, labels, cfg.inner_val_subjects, seed=cfg.seed + i)
+            pool, labels, cfg.inner_val_subjects, seed=fold_seed)
 
         # Normalisation statistics come from the training subjects ONLY.
         stats = fold_norm_stats(manifest, inner_train)
@@ -306,9 +332,10 @@ def loso_cv(
 
         train_ds = WindowDataset(manifest, cache_root, subjects=inner_train,
                                  augment=cfg.augment_train,
-                                 aug_time_flip=cfg.aug_time_flip,
+                                 aug_doppler_flip=cfg.aug_doppler_flip,
                                  aug_noise_std=cfg.aug_noise_std,
-                                 rng_seed=cfg.seed + i, **common)
+                                 aug_mask_frac=cfg.aug_mask_frac,
+                                 rng_seed=fold_seed, **common)
         val_ds = WindowDataset(manifest, cache_root, subjects=inner_val,
                                augment=False, **common)
         test_ds = WindowDataset(manifest, cache_root, subjects=[held_out],
