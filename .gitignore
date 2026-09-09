@@ -73,6 +73,7 @@ Ziad_Boussedra_TFM/chapters/**/*.aux
 # ── Not thesis content: archives, copyrighted papers, the school template, personal notes ──
 *.zip
 /*.pdf
+!/Ziad_Boussedra_TFM_report.pdf
 /*.docx
 templates/
 shared_ziad/
@@ -86,9 +87,8 @@ thesis-parkinson-radar/REMAINING_WORK.md
 thesis-parkinson-radar/WORK_PLAN.md
 thesis-parkinson-radar/MEETING_BRIEF.md
 
-# ── Public repo keeps the thesis as a PDF only; LaTeX source, figures and template stay local ──
-Ziad_Boussedra_TFM/*
-!Ziad_Boussedra_TFM/main.pdf
+# ── Public repo keeps the thesis as one PDF at the root; LaTeX source, figures and template stay local ──
+Ziad_Boussedra_TFM/
 
 # ── Internal documentation and duplicates of thesis material ──
 thesis-parkinson-radar/RESULTS.md

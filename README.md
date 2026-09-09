@@ -3,13 +3,13 @@
 Master's thesis, MSc in Signal Theory and Communications (MSTC), ETSIT-UPM, 2026.
 Author: Ziad Boussedra. Supervisor: Juan Ignacio Godino-Llorente.
 
-**Thesis (PDF):** [`Ziad_Boussedra_TFM/main.pdf`](Ziad_Boussedra_TFM/main.pdf)
+**Thesis (PDF):** [`Ziad_Boussedra_TFM_report.pdf`](Ziad_Boussedra_TFM_report.pdf)
 
 ## What is here
 
 | Folder | Content |
 |---|---|
-| `Ziad_Boussedra_TFM/main.pdf` | The thesis itself, as deposited. |
+| `Ziad_Boussedra_TFM_report.pdf` | The thesis itself, as deposited. |
 | `thesis-parkinson-radar/src/` | The pipeline: data loading, quality control, windowing, handcrafted features, classical baselines, SmallCNN / ResNet-18 probe / Envelope-LSTM training under nested leave-one-subject-out validation, statistics, Grad-CAM. |
 | `thesis-parkinson-radar/tools/` | Scripts that produce every figure and table in the thesis from the stored results. |
 | `thesis-parkinson-radar/experiments/` | The post-hoc experiments of the discussion chapter: AlexNet under both validation protocols, background-suppressed inputs. |
