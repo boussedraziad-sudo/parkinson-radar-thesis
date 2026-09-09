@@ -9,13 +9,12 @@ Author: Ziad Boussedra. Supervisor: Juan Ignacio Godino-Llorente.
 
 | Folder | Content |
 |---|---|
-| `Ziad_Boussedra_TFM/` | LaTeX source of the thesis (ETSIT template), figures and bibliography. Build: `pdflatex main && bibtex main && pdflatex main && pdflatex main`. |
+| `Ziad_Boussedra_TFM/main.pdf` | The thesis itself, as deposited. |
 | `thesis-parkinson-radar/src/` | The pipeline: data loading, quality control, windowing, handcrafted features, classical baselines, SmallCNN / ResNet-18 probe / Envelope-LSTM training under nested leave-one-subject-out validation, statistics, Grad-CAM. |
 | `thesis-parkinson-radar/tools/` | Scripts that produce every figure and table in the thesis from the stored results. |
 | `thesis-parkinson-radar/experiments/` | The post-hoc experiments of the discussion chapter: AlexNet under both validation protocols, background-suppressed inputs. |
 | `thesis-parkinson-radar/classical_split/` | The collapse test: the field's random hold-out reproduced on this dataset and scored on excluded subjects. |
 | `thesis-parkinson-radar/reports/`, `outputs/metrics/`, `outputs/figures/` | Aggregate results (AUCs, confidence intervals, group statistics) and the figures. |
-| `thesis-parkinson-radar/*.md` | Working documents: literature review, methodology notes, results log, handbook. |
 
 ## What is not here, and why
 

@@ -77,3 +77,30 @@ Ziad_Boussedra_TFM/chapters/**/*.aux
 templates/
 shared_ziad/
 *.jsonl
+
+# ── Working pages and progress tracking: not part of the public thesis repo ──
+*.html
+!Ziad_Boussedra_TFM/**/*.html
+thesis-parkinson-radar/TRACKER.md
+thesis-parkinson-radar/REMAINING_WORK.md
+thesis-parkinson-radar/WORK_PLAN.md
+thesis-parkinson-radar/MEETING_BRIEF.md
+
+# ── Public repo keeps the thesis as a PDF only; LaTeX source, figures and template stay local ──
+Ziad_Boussedra_TFM/*
+!Ziad_Boussedra_TFM/main.pdf
+
+# ── Internal documentation and duplicates of thesis material ──
+thesis-parkinson-radar/RESULTS.md
+thesis-parkinson-radar/FINDINGS.md
+thesis-parkinson-radar/LITERATURE_REVIEW.md
+thesis-parkinson-radar/REFERENCES.md
+thesis-parkinson-radar/CONCEPTS.md
+thesis-parkinson-radar/HANDBOOK.md
+thesis-parkinson-radar/METHODOLOGY_EXPLAINED.md
+thesis-parkinson-radar/DATA_GUIDE.md
+thesis-parkinson-radar/ONBOARDING.md
+project_summary_and_setup.md
+thesis-parkinson-radar/RELATED_WORK.tex
+thesis-parkinson-radar/references.bib
+
