@@ -285,7 +285,7 @@
     "random_forest|confounded_only": {
       "auc": 0.6175757575757576,
       "auc_lo": 0.46091346512843495,
-      "auc_hi": 0.7666756272401432,
+      "auc_hi": 0.7666756272401433,
       "balanced_acc": 0.6484848484848484,
       "f1": 0.6,
       "sensitivity": 0.6,

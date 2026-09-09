@@ -1,0 +1,12 @@
+  window_split seed=101: window AUC 0.836, acc 0.761, best epoch 18
+  window_split seed=102: window AUC 0.721, acc 0.649, best epoch 13
+  window_split seed=103: window AUC 0.764, acc 0.673, best epoch 17
+  recording_split seed=201: window AUC 0.629, acc 0.606, best epoch 0
+  recording_split seed=202: window AUC 0.833, acc 0.785, best epoch 16
+  recording_split seed=203: window AUC 0.821, acc 0.719, best epoch 11
+  recording_split seed=204: window AUC 0.805, acc 0.739, best epoch 19
+  recording_split seed=205: window AUC 0.713, acc 0.658, best epoch 19
+  collapse_test seed=301: window AUC 0.782, acc 0.759, best epoch 12
+  collapse_test seed=302: window AUC 0.900, acc 0.810, best epoch 18
+  collapse_test seed=303: window AUC 0.771, acc 0.644, best epoch 18
+wrote /Users/ziad.boussedra/Desktop/Master Thesis/thesis-parkinson-radar/classical_split/outputs/results.json and predictions.csv (3333 prediction rows)

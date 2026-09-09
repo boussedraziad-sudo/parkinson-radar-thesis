@@ -1,0 +1,443 @@
+% =====================================================================
+% Chapter 5, part 1: Discussion. Transcribed from the reviewed
+% DISCUSSION.html % reviewed draft; pooled-only framing.
+% =====================================================================
+
+\section{Discussion}
+\label{sec:discussion}
+
+The results chapter measured what this dataset supports under
+subject-independent validation: subject-level scores that sit in the same
+band as the score recording duration provides on its own
+(Section~\ref{sec:res-floors}). Two questions follow from that measurement,
+and this chapter answers both with experiments rather than argument. The
+first is why published radar gait studies report so much more.
+Section~\ref{sec:disc-protocol} reproduces the literature's numbers on this
+very dataset by changing nothing but the validation design, first with the
+campaign's own network and then with the field's favourite architecture, and
+shows that those numbers collapse the moment a test subject is genuinely
+new. The second is what the scores obtained here are actually made of.
+Section~\ref{sec:disc-attention} reads the models' own attention maps,
+Section~\ref{sec:disc-intervention} deletes what they attend to and confirms
+that no hidden gait signature was underneath, and
+Section~\ref{sec:disc-positive} states the findings the data does establish.
+Section~\ref{sec:limitations} closes with the limitations; the concrete path
+to stronger results follows in the future-work section.
+
+The framing this chapter defends can be stated in advance. The gap between
+this thesis's numbers and the literature's is not a performance gap; it is a
+\textbf{measurement gap}, because the two are answering different questions.
+The literature's question, whether a model can label recordings of people it
+has already seen, is answered here too, and with literature-grade numbers.
+The clinical question, whether a model can flag a person it has never seen,
+is the one this thesis insists on, and its honest answer on this dataset is:
+not yet, and not demonstrably from gait shape.
+
+% ---------------------------------------------------------------------
+\subsection{The random-split demonstration: the gap is the protocol}
+\label{sec:disc-protocol}
+
+The claim that the literature's numbers are inflated by validation design
+would normally rest on reading papers. Here it was tested directly: the same
+network and data as the main campaign, trained the field's way, with a
+random hold-out split, early stopping on window-level scores and no window
+weighting, so that the whole published recipe is reproduced rather than
+argued about. Table~\ref{tab:protocol_ladder} reports the outcome.
+
+\begin{table}[H]
+  \centering
+  \caption[The validation ladder]{One architecture under four validation
+  designs. All rows use the ResNet-18 probe of
+  Section~\ref{sec:deep}; the first three are trained identically and differ
+  only in what the split keeps apart.}
+  \label{tab:protocol_ladder}
+  \small
+  \begin{tabular}{@{}L{5.1cm}cL{7.2cm}@{}}
+    \toprule
+    Validation design & AUC & What it measures \\
+    \midrule
+    Window-level random split & 0.774 &
+      Nearly identical overlapping windows of the same walk sit on both
+      sides of the split (3 repeats). \\
+    Recording-level random split (the literature's hold-out) & 0.760 &
+      Every test recording comes from a person the model trained on
+      (5 repeats). \\
+    Same trained model, subjects excluded from training & 0.579 &
+      The person is unknown; only the disease could help (3 repeats). \\
+    Leave-one-subject-out (the thesis protocol) & 0.654 &
+      Every subject scored by a model that never saw them
+      (subject-level AUC, Table~\ref{tab:deepauc}). \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The rows deserve unpacking, because the mechanics decide what each number
+means. In the \textbf{window split}, the three-second windows themselves are
+shuffled into training, validation and test piles. In the \textbf{recording
+split}, whole walks are shuffled instead, so each test walk is new but the
+walker's other walks are in training; this is the design most published
+studies use. In the \textbf{third row}, eight subjects (five control, three
+PD) are set aside before anything is trained; the model trains
+recording-split style on the remaining fifty subjects, and the finished
+model then classifies every window of the eight strangers' recordings, with
+a fresh eight in each repeat. In the \textbf{last row}, one subject is set
+aside, the model trains on the other 57, and scores every window of all of
+that person's recordings; the average of those window probabilities becomes
+that one person's score, and repeating this 58 times gives the subject-level
+AUC of the main campaign. One unit caveat applies: the first three rows are
+window-level AUC averaged over the repeats, the level at which the
+literature scores, while the last row is subject-level, one score per
+person. The trend is the point: the more the split leaks, the higher the
+number, and stripping the leakage returns the same model, on the same data,
+to the modest band reported in Chapter~\ref{ch:results}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{disc_collapse.png}
+  \caption[The collapse test]{The collapse test, the third row of
+  Table~\ref{tab:protocol_ladder}: three instances of the ResNet-18 probe, one
+  line each. The left end of each line is that model's window AUC on test
+  recordings of subjects it saw in training; the right end is the same model
+  on the eight subjects excluded from training.}
+  \label{fig:disc_collapse}
+\end{figure}
+
+Each line in Figure~\ref{fig:disc_collapse} is one trained model, not one
+subject. On the left, every model scores high on test recordings of people
+whose other walks it trained on; on the right, the very same models are
+asked about the eight people they have never seen, and every line falls,
+with two of the three landing at chance. A model that had learned the
+disease would hold its score on strangers, because Parkinson's looks like
+Parkinson's in people it never met. A model that learned \textbf{people}
+scores high on the familiar and collapses on the unknown, and that is what
+happens. The inflated numbers are real numbers; they are simply answers to
+the recognition question, not the screening question. Once it is established
+that the validation design alone manufactures a difference on the order of
+0.2 AUC on this very dataset (0.18 to 0.20 between the averaged rows of
+Table~\ref{tab:protocol_ladder}, and up to 0.4 in the most extreme repeat of
+Figure~\ref{fig:disc_collapse}), comparisons with published accuracies stop
+being embarrassing and start being diagnostic.
+
+% ---------------------------------------------------------------------
+\subsection{The same demonstration with the field's own network}
+\label{sec:disc-alexnet}
+
+The demonstration above uses the thesis's own network, and a sceptic could
+object that the collapse says something about that particular model rather
+than about the protocol. The experiment was therefore repeated with
+\textbf{AlexNet}, the architecture behind the field's headline micro-Doppler
+result \cite{hayashi2021}, given the same input adaptation as the ResNet-18
+probe of Section~\ref{sec:deep}: ImageNet-pretrained, with the first
+convolution averaged to the two radar channels. Unlike the probe, which
+retrains a single 1{,}026-parameter layer, AlexNet's full classifier block is
+retrained (54.5 million trainable parameters) at the source literature's
+learning rate. The window
+cache and augmentation are those of the main campaign; the random-split runs
+additionally adopt the literature's training conventions, early stopping on
+window-level scores and no window weighting. Table~\ref{tab:alexnet}
+reports the outcome under both designs.
+
+\begin{table}[H]
+  \centering
+  \caption[AlexNet under the two protocols]{AlexNet under the literature's
+  protocol and under the thesis protocol. A seed is one repeat of the split:
+  the same recordings shuffled with a different random starting point.}
+  \label{tab:alexnet}
+  \footnotesize
+  \begin{tabular}{@{}llccc@{}}
+    \toprule
+    Validation design & Train / val / test & Subject AUC & 95\,\% CI &
+      Seen in training \\
+    \midrule
+    Random split, seed 1 & 70/15/15\,\% recordings & 0.875 & -- & 100\,\% \\
+    Random split, seed 2 & 70/15/15\,\% recordings & 0.891 & -- & 100\,\% \\
+    Random split, seed 3 & 70/15/15\,\% recordings & 0.735 & -- & 100\,\% \\
+    Leave-one-subject-out & 49/8/1 subjects, $\times$58 & 0.695 &
+      [0.554, 0.833] & 0\,\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{disc_alex_ladder.png}
+  \caption[AlexNet: one architecture, two protocols]{AlexNet's subject-level
+  AUC under the literature's random split (red dots, one per seed, each
+  labelled with its score) and under leave-one-subject-out (blue dot with
+  its 95\,\% confidence interval), against the chance and duration-alone
+  lines.}
+  \label{fig:alexladder}
+\end{figure}
+
+Figure~\ref{fig:alexladder} admits three readings. First, the field's own
+architecture reaches 0.87 and 0.89 the moment every test subject is someone
+it trained on, and drops the moment they are not: \textbf{the split, not the
+architecture, decides} whether the number is literature-grade or honest.
+Second, the inflated number is itself unstable: reshuffling the same
+recordings moves it from 0.89 down to 0.74, a swing of 0.16 between seeds.
+Third, the honest interval reaches down past the duration floor of
+Table~\ref{tab:floors}, so even the best protocol-compliant score in this
+project cannot be distinguished from what elapsed time alone provides.
+
+An AUC summarises how well the scores \emph{rank} people; a screening
+decision is a yes or no. Figure~\ref{fig:alexconfusion} therefore shows the
+same network's actual decisions twice, first on subjects it saw in training
+and then on subjects it has never seen. The two panels count different
+things: on the left, each cell counts three-second windows, every test
+window classified on its own at the default 0.5 cut-off and pooled over the
+three seeds' test sets; on the right, each cell counts people, with all
+windows of a person's recordings scored, their average becoming that
+person's single probability, and the person called PD when it exceeds the
+prevalence threshold of 0.431 (Section~\ref{sec:res-decisions}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{disc_alex_confusion_pair.png}
+  \caption[AlexNet's decisions, seen versus never-seen]{AlexNet's decisions
+  on subjects seen in training (left: random split, window level, pooled
+  over the three seeds) and on never-seen subjects (right:
+  leave-one-subject-out, one decision per person, threshold at the PD
+  prevalence).}
+  \label{fig:alexconfusion}
+\end{figure}
+
+On seen subjects the model is balanced and looks useful, calling about
+70\,\% of each class correctly. On never-seen subjects the balance breaks:
+it catches 21 of the 25 PD patients, but only by flagging 18 of the 33
+healthy controls along with them, a specificity of 45\,\%, worse than a coin
+flip. The left panel is what the literature's validation rewards, and it is
+real; it is also the answer to the recognition question, because every one
+of those windows belongs to a person whose other walks were in training. The
+right panel is the clinical question: faced with a stranger, the network can
+only lean toward calling recordings PD, so of the 39 people it would send
+onward for review, 18 are healthy. The same architecture is clinic-ready on
+people it knows and close to a biased guess on the population a screening
+tool actually exists for.
+
+Two details make the honest AlexNet score itself instructive. Its subject
+scores carry \textbf{more duration residue than any of the campaign's
+headline models} (correlation $+0.25$ with window count, against $+0.08$ for
+the ResNet-18 probe): with 54.5 million parameters free, it drinks
+more deeply from the same confound; it does not find a new signal. And its
+best validation epoch averages 0.9, meaning the score is essentially in
+place after a single pass over the data, the learning profile of an easy
+shortcut rather than of a subtle clinical pattern.
+
+% ---------------------------------------------------------------------
+\subsection{What the models actually read}
+\label{sec:disc-attention}
+
+The results chapter reported the scores; the attention analysis explains
+them. Grad-CAM maps \cite{selvaraju2017} were computed for every window of
+each of the 58 held-out subjects, for both image models: the compact CNN
+trained from scratch (SmallCNN) and the pretrained deep network (the
+ResNet-18 probe). One gallery per model follows, so the finding can
+be checked on each.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{disc_gradcam_smallcnn.png}
+  \caption[Grad-CAM gallery, SmallCNN]{Where the SmallCNN's PD output looks,
+  for confident correct decisions (top) and confident mistakes (bottom):
+  spectrogram in grey, attention in colour.}
+  \label{fig:gradcam_smallcnn}
+\end{figure}
+
+In every window of Figure~\ref{fig:gradcam_smallcnn} called PD, right or
+wrong, the attention floods the empty background; the gait envelope itself
+is the one region left unhighlighted. In every window called control the map
+stays dark. The decision variable is a property of the recording, its
+background and enhancement texture, not of the walk. The mistakes obey the
+same rule, which is why they are systematic rather than random: noisy-backed
+controls get flagged, and clean-backed patients get missed, exactly the
+pattern already visible in the case gallery of Figure~\ref{fig:casegallery}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{disc_gradcam_resnet.png}
+  \caption[Grad-CAM gallery, ResNet-18 probe]{The same gallery for
+  the ResNet-18 probe: confident correct decisions on top,
+  confident mistakes below.}
+  \label{fig:gradcam_resnet}
+\end{figure}
+
+The deep network in Figure~\ref{fig:gradcam_resnet} obeys the same rule,
+expressed more diffusely: windows it calls PD are flooded with attention
+across the whole image, silent rows included, while windows it calls control
+are left almost unattended. Averaged over every window of all 58 held-out
+subjects, its attention density on called-PD windows is 0.37 against 0.13 on
+called-control windows; for the SmallCNN the same pair is 0.33 against 0.04.
+Two different architectures, one trained from scratch and one built on
+frozen ImageNet features, converge on the same behaviour: respond to the
+overall character of the recording, not to any localised gait structure.
+
+Three quantitative facts, computed over every window of all 58 held-out
+subjects, complete the picture:
+
+\begin{itemize}
+  \item For the SmallCNN, attention density is highest in the silent rows
+        above 500~Hz (0.19 per pixel against 0.12 in the torso band), a
+        region containing no gait energy, and its attention sits visibly
+        higher in frequency on PD windows than on control windows (centre of
+        mass 380 against 333~Hz).
+  \item For the SmallCNN, turn-straddling windows draw \textbf{four to six
+        times} the attention of steady-walking windows, matching the
+        ablation of Table~\ref{tab:ablations} in which excluding the turn
+        collapsed its score.
+  \item The probe differs in one telling way: because its backbone
+        is frozen, its maps average out \textbf{identical between the true
+        classes} (background attention share 0.337 on PD windows against
+        0.338 on control windows). A fixed ImageNet description of these
+        images contains nothing class-specific to point at, so its thin
+        trained head can only read overall texture.
+\end{itemize}
+
+Taken together, the mechanism of every score in this thesis is now
+explicit: \textbf{elapsed time}, carried by turn-and-stand content and
+window counts, plus \textbf{per-recording character}, carried by background
+and enhancement texture. Both are properties a screening tool must not rely
+on; neither is the spectral shape of a Parkinsonian walk.
+
+% ---------------------------------------------------------------------
+\subsection{The intervention test: removing what they read}
+\label{sec:disc-intervention}
+
+An interpretability finding invites an intervention: if the models read the
+background, delete the background and see what remains. The follow-up
+experiment, pre-registered before any window was rebuilt, subtracted each
+recording's background profile and cropped the silent rows beyond 500~Hz,
+then re-ran both image models under the unchanged protocol.
+Table~\ref{tab:bgsuppressed} reports the outcome.
+
+\begin{table}[H]
+  \centering
+  \caption[Background-suppressed results]{Both image models with the background suppressed (pooled AUC,
+  full leave-one-subject-out protocol).}
+  \label{tab:bgsuppressed}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    Model & Standard input & Background-suppressed & 95\,\% CI (suppressed) \\
+    \midrule
+    SmallCNN        & 0.616 & 0.624 & [0.471, 0.768] \\
+    ResNet-18 probe & 0.654 & 0.686 & [0.539, 0.824] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two conclusions follow, both informative:
+
+\begin{itemize}
+  \item \textbf{No hidden gait signal surfaced.} If the texture had been
+        masking a real gait signature, removing it should have lifted the
+        scores clearly above the duration floor. Every confidence interval
+        still contains 0.610.
+  \item \textbf{The nuisance is distributed, not localised.} The scores did
+        not collapse either: enough per-recording character survives inside
+        the gait band, plausibly in the per-recording contrast enhancement,
+        for the models to keep finding it. The recording-level nuisance is a
+        property of how each file was processed, not one removable region of
+        the image.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection{What was found, stated positively}
+\label{sec:disc-positive}
+
+Not everything in this thesis is a negative result. The findings of
+Table~\ref{tab:positive} are established by the data and hold under the
+strict protocol; each row gives the finding, the evidence in brief, and what
+it tells us.
+
+Against the literature, these results are not an outlier; they are what the
+few honest data points predict. Of the sixteen works reviewed in
+Chapter~\ref{ch:soa}, only two report a genuinely subject-independent protocol, and one
+of them saw its scores fall the moment it moved from a pooled split to
+leave-one-subject-out evaluation \cite{fard2026}. The study closest in modality to
+this work preferred its modest envelope model over a network trained on the full image
+whose higher score its own authors distrusted, because that network had
+keyed on background differences between recording sites \cite{hayashi2021}.
+This thesis extends that honest line to Parkinson's screening and explains,
+mechanistically, where the distrusted scores come from.
+
+\begin{table}[H]
+  \centering
+  \caption[The positive findings]{The positive findings.}
+  \label{tab:positive}
+  \small
+  \begin{tabular}{@{}L{3.6cm}L{5.1cm}L{5.4cm}@{}}
+    \toprule
+    \textbf{Finding} & \textbf{Evidence} & \textbf{What it tells us} \\
+    \midrule
+    \textbf{PD subjects take measurably longer}, and the extra time
+    concentrates in standing up and turning. &
+    The duration gap between the groups is clear in the recording lengths,
+    is largest in the walk variant that includes the chair phase, and
+    shrinks when the turn is removed. &
+    Radar captures the slowness of movement that clinicians already test
+    for; the timing of a walk is a real, usable signal. \\
+    \addlinespace
+    \textbf{Radar timing is a credible screening quantity.} &
+    Recording duration alone separates the groups above chance under honest,
+    subject-independent validation. &
+    An automated timed-up-and-go measurement is this dataset's trustworthy
+    first-line signal, and it needs no deep network at all. \\
+    \addlinespace
+    \textbf{A walk identifies the walker.} &
+    Recordings of the same person are far more alike than recordings of
+    different people, for every one of the 58 subjects
+    (Section~\ref{sec:res_fingerprint}). &
+    Subject-independent validation is mandatory, and radar gait could serve
+    as a biometric even where diagnosis fails. \\
+    \addlinespace
+    \textbf{The field's validation gap is real and measurable.} &
+    Relaxing the protocol on this one dataset reproduces literature-grade
+    numbers that collapse on unseen subjects. &
+    Published accuracies reflect validation design as much as clinical
+    signal, so honest evaluation has to be demanded before numbers are
+    compared. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Limitations}
+\label{sec:limitations}
+
+Four limitations bound what this thesis can claim.
+Table~\ref{tab:limitations} states each one together with its consequence
+and the item that would resolve it.
+
+\begin{table}[H]
+  \centering
+  \caption[Limitations, and what would resolve each]{Limitations, and what would resolve each.}
+  \label{tab:limitations}
+  \small
+  \begin{tabular}{@{}L{4.4cm}L{9.9cm}@{}}
+    \toprule
+    \textbf{Limitation} & \textbf{Consequence, and what would resolve it} \\
+    \midrule
+    \textbf{No age metadata.} &
+    The dominant untestable confound: PD subjects are typically older, radar
+    separates young from elderly walkers at 94.9\,\% \cite{hayashi2021}, and
+    even the surviving duration signal could partly be ageing. Subject ages
+    would allow an age-matched analysis. \\
+    \addlinespace
+    \textbf{Combined foot channels hide left/right asymmetry.} &
+    Asymmetry is an established PD marker, and it is structurally invisible
+    after the two foot radars are merged into one channel. The original
+    per-sensor recordings would make it measurable. \\
+    \addlinespace
+    \textbf{58 subjects.} &
+    With 58 people, every score carries a wide uncertainty range, so a small
+    real effect can neither be proven nor ruled out at this size. Only a
+    much larger group, in the hundreds, can settle small differences. \\
+    \addlinespace
+    \textbf{No clinical information beyond the label.} &
+    Each subject is only marked PD or control. Without disease stage,
+    symptom severity or medication state, it is impossible to test whether
+    the signal grows with severity, or how treatment changes it, both of
+    which matter for a screening tool. \\
+    \bottomrule
+  \end{tabular}
+\end{table}

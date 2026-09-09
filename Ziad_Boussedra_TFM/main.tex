@@ -1,0 +1,237 @@
+% =====================================================================
+%  Master's Thesis — Ziad Boussedra
+%  Subject-independent Parkinson's classification from FMCW radar
+%  micro-Doppler gait signatures.
+%
+%  Based on the official ETSIT-UPM TFT template (plantilla_tft_etsit).
+%  Body language: ENGLISH (permitted — see the reference thesis by
+%  A. Mahboub, MSc Biomedical Engineering, ETSIT-UPM 2025).
+%  The Resumen (Spanish) + Summary (English) are BOTH mandatory.
+%
+%  Build:  pdflatex main → bibtex main → pdflatex main ×2
+% =====================================================================
+\documentclass[a4paper,12pt]{book}
+\usepackage[utf8]{inputenc}
+% Spanish loaded as a secondary language so the Resumen can switch to it.
+\usepackage[spanish,english]{babel}
+\usepackage{fancyhdr}
+\usepackage{amsmath, mathtools}
+\usepackage{amssymb}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{vmargin}
+\usepackage{cancel}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{appendix}
+\usepackage{array}             % >{...} column prefixes, needed for ragged p-columns
+\usepackage{booktabs}          % better tables for the results chapter
+% Ragged-right paragraph column: narrow justified columns produce ugly
+% inter-word gaps, so every p-column in a wide table uses this instead.
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{multirow}
+\usepackage[pdftex]{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, filecolor=black, citecolor=black,
+            urlcolor=[rgb]{0.10,0.32,0.55}}   % external links visibly clickable
+\urlstyle{same}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{wrapfig}
+\usepackage{transparent}
+\usepackage{import}
+\usepackage{verbatim}
+\usepackage{afterpage}
+\usepackage{emptypage}
+\usepackage{etoolbox}
+\usepackage{parskip}
+
+\graphicspath{{figures/}{cover/logos/}}
+
+% ---------------------------------------------------------------------
+%  AUTHOR / TITLE — single source of truth, used by the cover pages
+% ---------------------------------------------------------------------
+\newcommand{\tfmauthor}{Ziad Boussedra}
+\newcommand{\tfmtitle}{Subject-Independent Classification of Parkinson's
+Disease from Frequency-Modulated Continuous Wave Radar Micro-Doppler Gait
+Signatures}
+\newcommand{\tfmtitleshort}{Parkinson's Classification from Radar Micro-Doppler Gait}
+\newcommand{\tfmdegree}{Master's Degree in Signal Theory and Communications (MSTC)}
+\newcommand{\tfmtrack}{Specialisation: Signal Processing and Machine Learning for Big Data}
+\newcommand{\tfmsupervisor}{Juan Ignacio Godino-Llorente}
+\newcommand{\tfmyear}{2026}
+
+\makeatletter
+\definecolor{nar}{HTML}{FF8000}
+\renewcommand\mainmatter{
+    \clearpage
+  \@mainmattertrue
+  \pagenumbering{arabic}}
+
+\renewcommand\lstlistingname{Listing}
+\renewcommand\lstlistlistingname{List of Listings}
+
+% chapter head spacing (from the official template)
+\patchcmd{\@makechapterhead}{50\p@}{\chapheadtopskip}{}{}%
+\patchcmd{\@makechapterhead}{20\p@}{\chapheadsep}{}{}%
+\patchcmd{\@makechapterhead}{40\p@}{\chapheadbelowskip}{}{}%
+\patchcmd{\@makeschapterhead}{50\p@}{\chapheadtopskip}{}{}%
+\patchcmd{\@makeschapterhead}{40\p@}{\chapheadbelowskip}{}{}%
+\makeatother
+\newlength{\chapheadtopskip}\setlength{\chapheadtopskip}{20pt}
+\newlength{\chapheadsep}\setlength{\chapheadsep}{40pt}
+\newlength{\chapheadbelowskip}\setlength{\chapheadbelowskip}{15pt}
+
+\renewcommand{\arraystretch}{1.3}
+
+% Dimensions (unchanged from the official template)
+\textwidth = 16cm
+\textheight = 25cm
+\topmargin = 1cm
+\oddsidemargin = 2.5cm
+\evensidemargin = 2.5cm
+\headsep = 1cm
+\footskip = 1.5cm
+
+\makeatletter
+\renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
+\thispagestyle{fancy}%
+\global\@topnum\z@
+\@afterindentfalse
+\secdef\@chapter\@schapter}
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+        \Huge\bfseries \thechapter.\space%
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\transparent{0.6}\includegraphics[width=3cm]{cover/logos/logoetsit.png}}
+\fancyhead[RE,LO]{\transparent{0.6}\thepage}
+\chead{\transparent{0.6}\tfmauthor}
+\fancyfoot[CE,CO]{\transparent{0.6}\tfmtitleshort}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+% --- Layout hygiene -------------------------------------------------
+% `parskip` makes inter-paragraph glue elastic; `book` defaults to
+% \flushbottom, which stretches that glue to force every page to the same
+% height. On pages with few paragraphs (e.g. around a float) that produces
+% very large, ugly gaps. \raggedbottom lets short pages simply end short.
+\raggedbottom
+% Last-resort stretch so the occasional long word/URL does not push a line
+% past the right margin. Preferred over \sloppy, which loosens everything.
+\setlength{\emergencystretch}{3em}
+% No hyphenation anywhere: words never break across lines; a word that does
+% not fit moves whole to the next line. The emergency stretch above absorbs
+% the extra inter-word spacing this creates.
+% Public repository with the code, frozen configuration and this document's source.
+% Personal GitHub account (boussedraziad-sudo).
+\newcommand{\repourl}{https://github.com/boussedraziad-sudo/parkinson-radar-thesis}
+
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\widowpenalty=10000
+\clubpenalty=10000
+% Balance the slack on float-only pages (by default all of it collects
+% between the floats, producing one huge mid-page gap).
+\makeatletter
+\setlength{\@fptop}{0pt plus 1fil}
+\setlength{\@fpsep}{12pt plus 2fil}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+% --------------------------------------------------------------------
+
+\begin{document}
+\selectlanguage{english}
+
+%% ============ FRONT MATTER (roman numerals) ============
+\frontmatter
+
+\input{cover/cover_orange.tex}
+\empty
+\input{cover/committee_page.tex}
+\empty
+\input{cover/cover_white.tex}
+\empty
+% The two title pages reset the page counter; restore the roman sequence so
+% no printed number repeats (covers i and iii are unnumbered title pages).
+\setcounter{page}{4}
+
+% Resumen (ES) + Summary (EN) + keywords — BOTH MANDATORY
+\input{frontmatter/abstract}
+\newpage
+\input{frontmatter/acknowledgements}
+
+\newpage
+\begin{center}
+   \tableofcontents
+\end{center}
+\newpage
+\begin{center}
+   \listoffigures
+   \listoftables
+\end{center}
+\newpage
+
+\input{frontmatter/acronyms.tex}
+\newpage
+
+%% ============ MAIN MATTER ============
+\mainmatter
+
+\chapter{Introduction and Objectives}\label{ch:intro}
+    \import{chapters/ch1_introduction/}{introduction.tex}
+    \import{chapters/ch1_introduction/}{objectives.tex}
+\newpage
+
+\chapter{State of the Art}\label{ch:soa}
+    \import{chapters/ch2_state_of_the_art/}{related_work.tex}
+\newpage
+
+\chapter{Materials and Methods}\label{ch:methods}
+    \import{chapters/ch3_methods/}{methods.tex}
+\newpage
+
+\chapter{Results}\label{ch:results}
+    \import{chapters/ch4_results/}{results.tex}
+\newpage
+
+\chapter{Discussion, Conclusions and Future Work}\label{ch:discussion}
+    \import{chapters/ch5_conclusions/}{discussion.tex}
+    \import{chapters/ch5_conclusions/}{conclusions.tex}
+    \import{chapters/ch5_conclusions/}{future_work.tex}
+
+\newpage
+% unsrturl = unsrt + hyperlinked url/doi (urlbst). Same reference
+% formatting as the official template's unsrt.
+\bibliographystyle{unsrturl}
+\bibliography{biblio_thesis}
+
+%% ============ MANDATORY ANNEXES ============
+% \backmatter issues \cleardoublepage under the class's openright default,
+% which inserted a blank page before Annex A whenever the bibliography ended
+% on an odd page; the document is single-sided, so annexes may start anywhere.
+\makeatletter\@openrightfalse\makeatother
+\backmatter
+\chapter{Annex A: Ethical, Economic, Social and Environmental Aspects}
+    \import{chapters/annexes/}{annexA_ethics.tex}
+\newpage
+
+\chapter{Annex B: Economic Budget}
+    \import{chapters/annexes/}{annexB_budget.tex}
+\newpage
+
+\end{document}

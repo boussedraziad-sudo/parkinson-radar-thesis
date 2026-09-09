@@ -7,102 +7,102 @@
       {
         "subject_id": "fisp_045",
         "group": "pd",
-        "subject_score": 0.15724124256665137
+        "subject_score": 0.15724108953011773
       },
       {
         "subject_id": "fisp_052",
         "group": "pd",
-        "subject_score": 0.16041379367708528
+        "subject_score": 0.16041378508667894
       },
       {
         "subject_id": "fisp_044",
         "group": "pd",
-        "subject_score": 0.2613859273818639
+        "subject_score": 0.2613860677872062
       },
       {
         "subject_id": "fisp_048",
         "group": "pd",
-        "subject_score": 0.2798308435920883
+        "subject_score": 0.27983081585420827
       },
       {
         "subject_id": "fisp_051",
         "group": "pd",
-        "subject_score": 0.3031523346397413
+        "subject_score": 0.3031526616298881
       },
       {
         "subject_id": "fisp_049",
         "group": "pd",
-        "subject_score": 0.37139800537469103
+        "subject_score": 0.3713978549870945
       },
       {
         "subject_id": "fisp_041",
         "group": "pd",
-        "subject_score": 0.3802799907487025
+        "subject_score": 0.3802800116480003
       },
       {
         "subject_id": "fisp_014",
         "group": "pd",
-        "subject_score": 0.4167857757076969
+        "subject_score": 0.4167856410206265
       },
       {
         "subject_id": "fisp_012",
         "group": "pd",
-        "subject_score": 0.45730700271658636
+        "subject_score": 0.457307104319264
       },
       {
         "subject_id": "fisc_033",
         "group": "control",
-        "subject_score": 0.6144636734583308
+        "subject_score": 0.6144636602085957
       },
       {
         "subject_id": "fisc_006",
         "group": "control",
-        "subject_score": 0.66051069131434
+        "subject_score": 0.6605107238420128
       },
       {
         "subject_id": "fisc_007",
         "group": "control",
-        "subject_score": 0.6834007412040886
+        "subject_score": 0.6834005993396475
       },
       {
         "subject_id": "fisc_005",
         "group": "control",
-        "subject_score": 0.6886620059754308
+        "subject_score": 0.6886620080733176
       },
       {
         "subject_id": "fisc_035",
         "group": "control",
-        "subject_score": 0.7118558656992254
+        "subject_score": 0.7118559527102764
       },
       {
         "subject_id": "fisc_014",
         "group": "control",
-        "subject_score": 0.7155786048595298
+        "subject_score": 0.715578478958637
       },
       {
         "subject_id": "fisc_010",
         "group": "control",
-        "subject_score": 0.741322451356937
+        "subject_score": 0.7413224605059576
       },
       {
         "subject_id": "fisc_008",
         "group": "control",
-        "subject_score": 0.7423716049729582
+        "subject_score": 0.7423715583369588
       },
       {
         "subject_id": "fisc_020",
         "group": "control",
-        "subject_score": 0.7609405881521996
+        "subject_score": 0.7609406204338169
       },
       {
         "subject_id": "fisc_012",
         "group": "control",
-        "subject_score": 0.7920380804088424
+        "subject_score": 0.7920379190482749
       },
       {
         "subject_id": "fisc_016",
         "group": "control",
-        "subject_score": 0.9658809691893796
+        "subject_score": 0.9658809931203729
       }
     ],
     "controls_wrong": 11,

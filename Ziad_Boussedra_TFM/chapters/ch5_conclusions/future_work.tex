@@ -1,0 +1,118 @@
+% =====================================================================
+% Chapter 5, part 3: Future work. Transcribed from the reviewed
+% DISCUSSION.html draft (section 7).
+% =====================================================================
+
+\section{Future Work}
+\label{sec:futurework}
+
+The limitations of Section~\ref{sec:limitations} are not dead ends. Ordered
+from immediately actionable to long-term, Table~\ref{tab:futurework} lays
+out how stronger and trustworthy results can be built on this line of work.
+
+\begin{table}[H]
+  \centering
+  \caption[Future work: the path to stronger results]{Future work: the path to stronger results.}
+  \label{tab:futurework}
+  \small
+  \begin{tabular}{@{}L{4.4cm}L{9.9cm}@{}}
+    \toprule
+    \textbf{Step} & \textbf{What it would deliver} \\
+    \midrule
+    \textbf{1. Model the timing signature directly.} &
+    Extract turn duration, sit-to-stand time and cadence from the
+    micro-Doppler signature as explicit quantities, instead of hoping a network
+    discovers them in pixels. Timing is the one signal this work showed to
+    be real: patients take longer, and the extra time concentrates in
+    standing up and turning. A model built directly on these timing
+    quantities would be an automated version of the timed-up-and-go test
+    that clinicians already use, which is also what the source radar system
+    was validated to measure \cite{lopezdelgado2026}. \\
+    \addlinespace
+    \textbf{2. Obtain subject ages.} &
+    An age-matched analysis would settle whether the surviving signal is
+    disease or ageing, and could also unmask real signal that age variation
+    currently hides. \\
+    \addlinespace
+    \textbf{3. Record a larger, session-balanced cohort.} &
+    With 58 subjects every score carries a wide uncertainty range, so even a
+    genuinely better model could not prove itself here. Demonstrating a
+    spectral gait signature clearly above the duration floor needs a cohort
+    in the low hundreds, recorded in sessions balanced across the two
+    groups. \\
+    \addlinespace
+    \textbf{4. Keep the evaluation standard.} &
+    Whatever the model, evaluate it on people it has never seen and report
+    it next to the duration floor and a confidence interval. The protocol
+    built for this thesis is pre-registered, ablation-tested and reusable as
+    the design document for every step above. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The review of this work also pointed to methodological improvements that
+target the specific failure found here, a network that looks at the wrong
+part of the image. Table~\ref{tab:futuremethods} lists them, each with the
+work that introduced the idea.
+
+\begin{table}[H]
+  \centering
+  \caption[Future work: methodological improvements]{Future work: methodological improvements suggested at review.}
+  \label{tab:futuremethods}
+  \small
+  \begin{tabular}{@{}L{4.4cm}L{9.9cm}@{}}
+    \toprule
+    \textbf{Technique} & \textbf{What it would change} \\
+    \midrule
+    \textbf{Make the network look at the gait.} &
+    Attention-guided masking trains the attention map itself to stay inside
+    the region of interest \cite{li2018gain}; explanation regularisation
+    penalises attention on regions known to be irrelevant, so that the network
+    is right for the right reasons \cite{ross2017,rieger2020}; counterfactual
+    training adds examples in which only the irrelevant part of the image
+    changes, so that it cannot carry the label \cite{kaushik2020}. All three
+    act directly on the failure the attention maps revealed. \\
+    \addlinespace
+    \textbf{Remove the background first.} &
+    An adaptive threshold set from the local energy of each signature strips
+    the background before training and leaves only the moving-body content
+    \cite{li2023adaptive}. Combined with the masking above, it takes the
+    shortcut away instead of asking the network to ignore it. \\
+    \addlinespace
+    \textbf{Learn a compact embedding first.} &
+    An encoder with a narrow bottleneck compresses each signature into a few
+    informative numbers before any classifier sees it
+    \cite{seyfioglu2018dcae}. Plotting that embedding with t-SNE or UMAP
+    \cite{vandermaaten2008,mcinnes2018} shows at a glance whether it separates
+    by diagnosis, by person or by recording length. \\
+    \addlinespace
+    \textbf{Borrow encoders from speech.} &
+    A micro-Doppler signature is closer to a speech spectrogram than to a
+    photograph, and encoders pretrained on speech transfer to it better than
+    image networks do \cite{li2020speech,tran2020}; the idea goes back to
+    speech-recognition front-ends applied to micro-Doppler \cite{yessad2011}.
+    This replaces the ImageNet probe with a source domain that matches. \\
+    \addlinespace
+    \textbf{Estimate the Doppler content parametrically.} &
+    An autoregressive spectral estimate replaces the short-time Fourier
+    transform with a model fitted to each short segment, giving smoother
+    signatures with less noise from the same data \cite{kaymarple1981}. \\
+    \addlinespace
+    \textbf{Tune the window length.} &
+    The 3.0\,s window was fixed in advance from the stride duration. Treating
+    it as a hyperparameter, chosen with the AUC as figure of merit inside the
+    inner validation loop, would test whether a longer or shorter view helps. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Closing Remarks}
+\label{sec:closing}
+
+This work asked a simple clinical question of a rich dataset and refused the
+shortcuts that would have made the answer look better than it is. What it
+hands to the next study is a modest and honest number, a clear explanation of
+why that number is not higher, and an evaluation protocol that any future
+attempt can be held to. The day richer data arrives, with ages, severity
+scores and the original per-sensor recordings, the standard defended here
+will be ready to measure it, on people the model has never seen.

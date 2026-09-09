@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "subject_auc": 0.6945454545454546,
+    "balanced_accuracy": 0.6472727272727272,
+    "subject_f1": 0.65625,
+    "threshold": 0.43103448275862066,
+    "confusion_matrix": [
+      [
+        15,
+        18
+      ],
+      [
+        4,
+        21
+      ]
+    ],
+    "n": 58,
+    "mean_epochs_run": 6.896551724137931,
+    "mean_best_epoch": 0.896551724137931,
+    "wall_clock_s": 949.1
+  },
+  "config": {
+    "epochs": 20,
+    "lr": 0.0001,
+    "weight_decay": 0.0001,
+    "batch_size": 32,
+    "patience": 5,
+    "inner_val_subjects": 8,
+    "channel_mode": "both",
+    "augment_train": true,
+    "aug_doppler_flip": true,
+    "aug_noise_std": 0.1,
+    "aug_mask_frac": 0.15,
+    "class_balance": true,
+    "window_weighting": true,
+    "max_turn_frac": null,
+    "num_workers": 0,
+    "seed": 1337,
+    "device": "mps"
+  }
+}

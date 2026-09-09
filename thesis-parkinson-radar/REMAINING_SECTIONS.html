@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Remaining Sections &middot; Radar micro-Doppler Parkinson's</title>
+<style>:root{--bg:#fbfaf8;--panel:#fff;--ink:#1a1a1a;--muted:#6b6b6b;--line:#e6e2dc;
+ --accent:#b5471f;--accent-soft:#fdf1ec;--link:#1a5f9e;--ok:#1f7a4d;--ok-bg:#eaf6ef;
+ --warn:#9a5b00;--warn-bg:#fdf3e2;--key-bg:#f4f7fb;--key-line:#2f6fae;
+ --ins-bg:#f0f7f2;--ins-line:#2e7d52;--def-bg:#f7f4fb;--def-line:#6b4f9e;
+ --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+ --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+ --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--panel:#1c1f23;--ink:#e6e6e6;
+ --muted:#9aa0a6;--line:#2c3137;--accent:#ff8a5c;--accent-soft:#2a1d17;--link:#7fb6e8;
+ --ok:#6bd39a;--ok-bg:#16281f;--warn:#e8b061;--warn-bg:#2a2113;--key-bg:#1a2230;
+ --key-line:#4a90d9;--ins-bg:#152420;--ins-line:#4bbd82;--def-bg:#1f1a29;--def-line:#a98fd6;}}
+:root[data-theme="dark"]{--bg:#15171a;--panel:#1c1f23;--ink:#e6e6e6;--muted:#9aa0a6;
+ --line:#2c3137;--accent:#ff8a5c;--accent-soft:#2a1d17;--link:#7fb6e8;--ok:#6bd39a;
+ --ok-bg:#16281f;--warn:#e8b061;--warn-bg:#2a2113;--key-bg:#1a2230;--key-line:#4a90d9;
+ --ins-bg:#152420;--ins-line:#4bbd82;--def-bg:#1f1a29;--def-line:#a98fd6;}
+:root[data-theme="light"]{--bg:#fbfaf8;--panel:#fff;--ink:#1a1a1a;--muted:#6b6b6b;
+ --line:#e6e2dc;--accent:#b5471f;--accent-soft:#fdf1ec;--link:#1a5f9e;--ok:#1f7a4d;
+ --ok-bg:#eaf6ef;--warn:#9a5b00;--warn-bg:#fdf3e2;--key-bg:#f4f7fb;--key-line:#2f6fae;
+ --ins-bg:#f0f7f2;--ins-line:#2e7d52;--def-bg:#f7f4fb;--def-line:#6b4f9e;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+ line-height:1.72;font-size:17px;-webkit-font-smoothing:antialiased}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:100}
+.wrap{max-width:1280px;margin:0 auto;padding:0 22px 90px;
+ display:grid;grid-template-columns:250px minmax(0,1fr);gap:44px}
+@media(max-width:980px){.wrap{grid-template-columns:1fr;gap:0}}
+header.hero{grid-column:1/-1;padding:52px 0 26px;border-bottom:1px solid var(--line);margin-bottom:34px}
+.kicker{font-family:var(--sans);font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+ color:var(--accent);font-weight:700;margin:0 0 10px}
+h1{font-family:var(--sans);font-size:clamp(28px,4.4vw,42px);line-height:1.14;font-weight:700;
+ margin:0 0 12px;letter-spacing:-.02em}
+.sub{font-family:var(--sans);color:var(--muted);font-size:15px;margin:0 0 20px;max-width:70ch}
+.statlead{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;
+ text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.stats{display:flex;flex-wrap:wrap;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+ padding:11px 15px;min-width:150px;flex:1 1 150px}
+.stat b{font-family:var(--sans);font-size:22px;display:block;line-height:1.1;color:var(--accent)}
+.stat span{font-family:var(--sans);font-size:11.5px;color:var(--ink);text-transform:uppercase;
+ letter-spacing:.04em;font-weight:600;display:block;margin-top:3px}
+.stat span i{display:block;font-style:normal;font-weight:400;text-transform:none;
+ letter-spacing:0;color:var(--muted);font-size:11.5px;margin-top:2px}
+nav.toc{position:sticky;top:26px;align-self:start;font-family:var(--sans);
+ max-height:calc(100vh - 52px);overflow:auto}
+@media(max-width:980px){nav.toc{position:static;margin-bottom:34px;border:1px solid var(--line);
+ border-radius:11px;padding:14px 16px;background:var(--panel)}}
+nav.toc h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}
+nav.toc ol{list-style:none;margin:0;padding:0}
+nav.toc a{display:flex;gap:9px;text-decoration:none;color:var(--muted);font-size:13.5px;
+ line-height:1.4;padding:6px 9px;border-radius:7px;border-left:2px solid transparent}
+nav.toc a:hover{color:var(--ink);background:var(--panel)}
+nav.toc a.on{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
+.tn{font-variant-numeric:tabular-nums;opacity:.6;min-width:14px}
+main{min-width:0}
+.sec{margin:0 0 52px;scroll-margin-top:24px}
+h2{font-family:var(--sans);font-size:24px;font-weight:700;letter-spacing:-.01em;margin:0 0 8px;
+ display:flex;gap:13px;align-items:baseline;line-height:1.25;padding-top:20px;border-top:2px solid var(--ink)}
+.secnum{font-size:13px;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;
+ min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;
+ flex:none;font-weight:700;transform:translateY(-2px)}
+h3{font-family:var(--sans);font-size:17.5px;font-weight:700;margin:32px 0 10px;color:var(--ink)}
+p{margin:0 0 15px;max-width:76ch}
+ul,ol{max-width:76ch;padding-left:22px}li{margin:0 0 8px}
+.sm{font-size:.85em;color:var(--muted)}
+code{font-family:var(--mono);font-size:.87em;background:var(--panel);border:1px solid var(--line);
+ padding:1px 5px;border-radius:4px}
+figure{margin:26px 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+figure img{width:100%;height:auto;display:block;border-radius:7px;background:#fff}
+figcaption{font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:11px;line-height:1.55}
+.fname{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);
+ padding:2px 6px;border-radius:4px;margin-right:6px}
+.insight{background:var(--ins-bg);border-left:3px solid var(--ins-line);border-radius:0 8px 8px 0;
+ padding:12px 16px;margin:12px 0 0}
+.ilab{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--ins-line)}
+.insight p{margin:5px 0 0;font-size:14.5px;line-height:1.62;max-width:none}
+.key,.warn{border-radius:0 9px 9px 0;padding:14px 18px;margin:22px 0;max-width:76ch}
+.key{background:var(--key-bg);border-left:3px solid var(--key-line)}
+.warn{background:var(--warn-bg);border-left:3px solid var(--warn)}
+.klabel{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.key .klabel{color:var(--key-line)}.warn .klabel{color:var(--warn)}
+.key p,.warn p{margin:5px 0 0;font-size:15.5px;line-height:1.62;max-width:none}
+.defn{background:var(--def-bg);border:1px solid var(--def-line);border-left-width:3px;
+ border-radius:0 9px 9px 0;padding:13px 17px;margin:18px 0;max-width:76ch}
+.dterm{font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--def-line);
+ display:block;margin-bottom:3px}
+.defn p{margin:0;font-size:15px;line-height:1.62;max-width:none}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--panel);margin:20px 0}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:13.5px;min-width:520px}
+th{text-align:left;padding:11px 13px;border-bottom:1.5px solid var(--line);font-size:10.5px;
+ text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;white-space:nowrap}
+td{padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--accent-soft)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.bad{background:var(--warn-bg);color:var(--warn)}
+.pill.neutral{background:var(--line);color:var(--muted)}
+.chain{font-family:var(--mono);font-size:12.5px;background:var(--panel);border:1px solid var(--line);
+ border-radius:10px;padding:16px 18px;overflow-x:auto;line-height:1.75;margin:20px 0;white-space:pre}
+#top{position:fixed;right:20px;bottom:20px;width:42px;height:42px;border-radius:50%;
+ background:var(--panel);border:1px solid var(--line);color:var(--ink);cursor:pointer;font-size:17px;
+ display:none;align-items:center;justify-content:center;z-index:50}
+#top.show{display:flex}
+a{color:var(--link)}
+@media print{nav.toc,#top,#bar{display:none}.wrap{display:block;max-width:100%}
+ figure,table,.defn{break-inside:avoid}body{font-size:10.5pt;background:#fff;color:#000}}
+.later{background:var(--panel);border:1px dashed var(--line);border-left:3px solid var(--muted);
+ border-radius:0 9px 9px 0;padding:12px 16px;margin:20px 0;max-width:76ch}
+.ltag{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.later p{margin:4px 0 0;font-size:14.5px;line-height:1.6;max-width:none;color:var(--muted)}
+.src{font-family:var(--sans);font-size:.78em;color:var(--muted);background:var(--panel);
+ border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap}
+
+.sec h4{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--ink);margin:26px 0 8px}
+.intro{border-left:3px solid var(--accent);padding:2px 0 2px 16px;margin:22px 0 6px}
+.intro p{margin:0;font-size:15.5px;line-height:1.62;max-width:none;color:var(--ink)}
+.slot{font-family:var(--sans);font-size:12.5px;color:var(--ink-3);margin:2px 0 14px}
+.slot code{background:var(--surface);padding:2px 7px;border-radius:5px}
+code.ck{background:var(--surface);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--accent)}
+.draft{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin:14px 0}
+.draft p{max-width:none}
+.wc{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-top:8px}
+</style></head><body>
+<div id="bar"></div>
+<div class="wrap">
+<header class="hero">
+  <p class="kicker">Master's thesis &middot; every unwritten section, drafted for review</p>
+  <h1>The Remaining Sections</h1>
+  <p class="sub">In the order they appear in the report: the Spanish Resumen and
+  English Summary, the acknowledgements scaffold, Chapter 1 (Introduction and
+  Objectives), and Annexes A and B. The acronym list is already complete, and
+  the pending Results &sect;4.7 has been dropped from the report along with
+  the methods promise that announced it. Each section names the LaTeX file it
+  will be transcribed into once you approve it.</p>
+  <div class="statlead">What this closes:</div>
+  <div class="stats">
+    <div class="stat"><b>2</b><span>abstracts drafted<i>Resumen + Summary</i></span></div>
+    <div class="stat"><b>Ch. 1</b><span>fully drafted<i>4 + 1 sections</i></span></div>
+    <div class="stat"><b>A + B</b><span>annexes drafted<i>ethics + budget</i></span></div>
+    <div class="stat"><b>0</b><span>pending sections left<i>&sect;4.7 dropped</i></span></div>
+  </div>
+</header>
+<nav class="toc"><h4>Contents</h4><ol><li><a href="#s1"><span class="tn">1</span>Resumen y palabras clave (frontmatter, Spanish)</a></li><li><a href="#s2"><span class="tn">2</span>Summary and keywords (frontmatter, English)</a></li><li><a href="#s3"><span class="tn">3</span>Acknowledgements (frontmatter)</a></li><li><a href="#s4"><span class="tn">4</span>Chapter 1 &middot; Introduction</a></li><li><a href="#s5"><span class="tn">5</span>Chapter 1 &middot; Objectives</a></li><li><a href="#s6"><span class="tn">6</span>Annex A &middot; Ethical, economic, social and environmental aspects</a></li><li><a href="#s7"><span class="tn">7</span>Annex B &middot; Economic budget</a></li></ol></nav>
+<main><section id="s1" class="sec"><h2><span class="secnum">1</span>Resumen y palabras clave (frontmatter, Spanish)</h2>
+<p class="slot">Goes into: <code>frontmatter/abstract.tex &middot; first block &middot; limit 500 words</code></p>
+<div class="intro"><p>The template requires the Spanish Resumen and the English Summary, both at most 500 words, structured context, problem, data, method, result, conclusion. The keywords are already in place in the file. Have a native speaker read the Spanish before submission.</p></div>
+
+<div class="draft">
+<p>La enfermedad de Parkinson es el segundo trastorno neurodegenerativo
+m&aacute;s frecuente, y la alteraci&oacute;n de la marcha figura entre sus
+signos motores m&aacute;s tempranos e incapacitantes. El radar de onda
+continua modulada en frecuencia (FMCW) permite observar la marcha sin
+contacto, sin c&aacute;maras y sin sensores corporales: cada recorrido se
+convierte en un <strong>espectrograma micro-Doppler</strong>, una imagen
+tiempo-frecuencia que separa las velocidades del torso y de las
+extremidades. Ello lo hace atractivo para la evaluaci&oacute;n objetiva del
+movimiento en la cl&iacute;nica y en el hogar; sin embargo, ning&uacute;n
+trabajo publicado hab&iacute;a evaluado un clasificador de Parkinson frente
+a controles sobre estos espectrogramas con <strong>validaci&oacute;n
+independiente del sujeto</strong>, aquella en la que cada persona puntuada
+es alguien que el modelo nunca vio durante el entrenamiento, que es la
+condici&oacute;n real de una herramienta de cribado.</p>
+
+<p>Este trabajo construye esa evaluaci&oacute;n sobre una red de radar
+cl&iacute;nicamente validada y una cohorte de 58 sujetos (33 controles
+sanos y 25 pacientes). Se desarrolla un proceso completo y prerregistrado:
+ventanas de duraci&oacute;n fija sobre los espectrogramas, modelos
+cl&aacute;sicos basados en caracter&iacute;sticas y cuatro familias de
+aprendizaje profundo, incluida la arquitectura de referencia de la
+literatura, todo ello bajo validaci&oacute;n cruzada dejando-un-sujeto-fuera,
+con predictores de referencia deliberadamente simples junto a cada modelo e
+incertidumbre estimada a nivel de sujeto.</p>
+
+<p>Bajo este protocolo, ning&uacute;n clasificador demuestra conocer la
+enfermedad m&aacute;s all&aacute; de lo que revela la duraci&oacute;n de la
+grabaci&oacute;n, pues los pacientes sencillamente tardan m&aacute;s. El
+an&aacute;lisis de atenci&oacute;n y un experimento de intervenci&oacute;n
+atribuyen la puntuaci&oacute;n restante a propiedades de cada
+grabaci&oacute;n y no a la forma espectral de la marcha; y reproducir sobre
+estos mismos datos el reparto aleatorio habitual en la literatura muestra
+cu&aacute;nto infla ese dise&ntilde;o el rendimiento: modelos aparentemente
+listos para la cl&iacute;nica se desploman ante desconocidos, porque
+reconocen a la persona y no a la enfermedad. Lo que sobrevive es
+cl&iacute;nicamente coherente: el radar mide con fiabilidad los tiempos de
+la marcha, en especial al levantarse y al girar, lo que equivale a una
+prueba <em>Timed-Up-and-Go</em> automatizada.</p>
+
+<p>La contribuci&oacute;n es doble: la primera evaluaci&oacute;n
+independiente del sujeto de este problema, y una demostraci&oacute;n
+mecanicista de c&oacute;mo los clasificadores de marcha por radar llegan a
+parecer mejores de lo que son, junto con el protocolo de evaluaci&oacute;n
+que lo impide.</p>
+<p class="wc">Draft length: about 330 words (limit 500).</p>
+</div>
+</section><section id="s2" class="sec"><h2><span class="secnum">2</span>Summary and keywords (frontmatter, English)</h2>
+<p class="slot">Goes into: <code>frontmatter/abstract.tex &middot; second block &middot; limit 500 words</code></p>
+
+<div class="draft">
+<p>Parkinson's disease is the second most common neurodegenerative
+disorder, and gait impairment is among its earliest and most disabling
+motor signs. Frequency-Modulated Continuous Wave (FMCW) radar can observe
+gait without contact, cameras or wearable sensors: a walk becomes a
+<strong>micro-Doppler spectrogram</strong>, a time-frequency image that
+resolves the velocities of the torso and the limbs. This makes radar
+attractive for objective motor assessment in clinics and homes, yet no
+published work had evaluated a Parkinson's-versus-control classifier on
+these spectrograms under <strong>subject-independent validation</strong>,
+in which every scored person is one the model never saw during training,
+which is the condition a screening tool faces in practice.</p>
+
+<p>This thesis builds that evaluation on a clinically validated radar
+network and a cohort of 58 subjects (33 healthy controls, 25 patients). A
+complete, pre-registered pipeline is developed: fixed-length windowing of
+the spectrograms, classical feature-based baselines and four deep learning
+families, including the field's reference architecture, all evaluated under
+leave-one-subject-out cross-validation, with deliberately simple reference
+predictors reported beside every model and uncertainty estimated at the
+subject level.</p>
+
+<p>Under this protocol, no classifier demonstrates more knowledge of the
+disease than a predictor based on recording duration alone, since patients
+simply take longer. Attention analysis and an intervention experiment trace
+the remaining score to properties of each recording rather than to the
+spectral shape of the walk, and reproducing the literature's usual random
+hold-out on this same dataset shows how strongly that design inflates
+performance: models that look clinic-ready on familiar subjects collapse on
+strangers, recognising the person rather than the disease. What survives is
+clinically coherent: radar reliably measures the timing of the walk,
+especially rising from the chair and turning, which amounts to an automated
+<em>Timed-Up-and-Go</em> test.</p>
+
+<p>The contribution is twofold: the first subject-independent evaluation of
+this problem, and a mechanistic demonstration of how radar gait classifiers
+come to look better than they are, together with the evaluation protocol
+that prevents it.</p>
+<p class="wc">Draft length: about 300 words (limit 500).</p>
+</div>
+</section><section id="s3" class="sec"><h2><span class="secnum">3</span>Acknowledgements (frontmatter)</h2>
+<p class="slot">Goes into: <code>frontmatter/acknowledgements.tex</code></p>
+<div class="intro"><p>Personal by nature, so this is only a scaffold with the names the file's own notes list. Rewrite it in your own voice.</p></div>
+
+<div class="draft">
+<p>I would like to thank my supervisor, Prof.&nbsp;Juan Ignacio
+Godino-Llorente, for his guidance and for holding this work to the standard
+it defends. I am grateful to Ignacio L&oacute;pez-Delgado and the GAPS team
+for building the radar network and for entrusting me with the dataset, and
+to every participant who walked the corridor that made this study
+possible.</p>
+<p>To my parents, for the confidence they placed in me long before any
+result justified it, and for making it possible for me to study far from
+home. To my family, for their patience with the distance and with every
+call this thesis made me miss. And to my friends, in Madrid and back home,
+who kept me company through the long weeks of writing and listened to far
+more about radar spectrograms than they ever signed up for. This work is
+theirs as much as mine.</p>
+</div>
+</section><section id="s4" class="sec"><h2><span class="secnum">4</span>Chapter 1 &middot; Introduction</h2>
+<p class="slot">Goes into: <code>chapters/ch1_introduction/introduction.tex</code></p>
+<div class="intro"><p>Four sections, as the file's outline plans: Motivation, Problem Statement, Contributions, and Structure of this Document. Citation keys for the LaTeX transcription are marked inline.</p></div>
+
+<h4>1.1 Motivation</h4>
+<div class="draft">
+<p>Parkinson's disease is the second most common neurodegenerative disorder,
+and its diagnosis remains clinical: a neurologist examines the patient's
+movement against consensus criteria <code class="ck">[postuma2015]</code>. Among the motor
+signs, <strong>gait</strong> holds a special place. It deteriorates early,
+it disables profoundly, and it is measurable: patients walk more slowly,
+with shorter steps, reduced arm swing and, characteristically, greater
+stride-to-stride variability and marked difficulty with turns and with
+rising from a chair <code class="ck">[mirelman2019]</code><code class="ck">[hausdorff2009]</code>. A
+technology that measured gait objectively, repeatedly and outside the
+clinic could support earlier referral, longitudinal tracking and therapy
+adjustment.</p>
+
+<p>The instruments available today each concede something. Optical motion
+capture is the laboratory gold standard but is expensive, confined to
+instrumented rooms and requires markers. Wearable sensors travel with the
+patient but must be worn, charged and accepted, a real burden for elderly
+users. Cameras are cheap but raise immediate privacy objections in the
+home. <strong>Radar</strong> concedes none of these: it is contactless,
+works through clothing and in darkness, records no identifiable image, and
+its micro-Doppler return resolves the velocities of the torso and the limbs
+individually <code class="ck">[seifert2020]</code><code class="ck">[gurbuz2024]</code>. A walk in front of a
+radar becomes a time-frequency image, a <strong>micro-Doppler
+spectrogram</strong>, in which the torso traces a slow band and each foot a
+fast periodic signature.</p>
+
+<p>This thesis works on data from a clinically validated multi-node FMCW
+radar network built precisely for gait monitoring, whose parameter
+extraction has been validated in both healthy and Parkinson's populations
+<code class="ck">[lopezdelgado2026]</code>. The cohort contains 58 subjects, 33 healthy
+controls and 25 Parkinson's patients, each walking a short corridor in a
+protocol modelled on the clinical Timed-Up-and-Go test. The question this
+thesis asks of that data is the natural next one: can the disease itself be
+read from the spectrograms?</p>
+</div>
+
+<h4>1.2 Problem Statement</h4>
+<div class="draft">
+<p>The radar gait literature has answered a different question. Its
+validation studies establish which biomechanical parameters radar measures
+reliably <code class="ck">[seifert2020]</code><code class="ck">[lopezdelgado2026]</code>, and its
+classification studies discriminate coarse groups, almost always young
+versus elderly walkers, reporting accuracies above 90&nbsp;%
+<code class="ck">[hayashi2021]</code><code class="ck">[hoshiga2021]</code>. No published work classifies
+Parkinson's disease against controls from micro-Doppler spectrograms under
+<strong>subject-independent validation</strong>, in which every scored
+person is one the model never saw during training.</p>
+
+<p>That validation detail is not a technicality; it decides what the number
+means. Micro-Doppler encodes individual identity strongly enough that
+published systems recognise <em>people</em> from their walk
+<code class="ck">[papanastasiou2020]</code><code class="ck">[ni2020]</code>. Any evaluation that lets
+recordings of the same person appear on both sides of the split therefore
+lets a model score highly by recognising the walker rather than the
+disease. The field's own record contains the warning: a spectrogram network
+reaching 97.8&nbsp;% was shown by its own authors to have keyed on
+background differences between recording sites rather than on gait
+<code class="ck">[hayashi2021]</code>. Confounds compound the risk: Parkinson's cohorts are
+older than their controls, patients take longer to complete the test, and
+every one of these regularities is available to a classifier as a
+shortcut.</p>
+
+<p>The problem this thesis addresses is therefore twofold: to build and
+evaluate the first subject-independent Parkinson's-versus-control
+classifier on radar micro-Doppler, and to do so under a protocol in which
+every score is defensible, with the confounds measured, floored and
+controlled rather than ignored.</p>
+</div>
+
+<h4>1.3 Contributions</h4>
+<div class="draft">
+<p>The thesis makes five contributions:</p>
+<ul>
+<li><strong>The first subject-independent evaluation</strong> of
+Parkinson's-versus-control classification from radar micro-Doppler gait
+signatures, spanning classical models and four deep model families,
+including the architecture behind the field's headline result
+<code class="ck">[hayashi2021]</code>.</li>
+<li><strong>A pre-registered confound-control methodology:</strong>
+fixed-length windows, nested leave-one-subject-out validation, explicit
+null floors beside every model, and subject-level bootstrap confidence
+intervals, frozen before any result was known.</li>
+<li><strong>An honest quantification of the achievable signal:</strong>
+under that protocol, no classifier is distinguishable from recording
+duration alone, and the finding is stated as a property of the data's
+signal content with its uncertainty, not as a modelling failure.</li>
+<li><strong>A mechanistic explanation of the scores:</strong> attention
+analysis of both image models, an intervention experiment that deletes what
+they attend to, and a protocol experiment that reproduces the literature's
+numbers on this very dataset and shows them collapsing on unseen
+subjects.</li>
+<li><strong>A constructive clinical finding and a reusable protocol:</strong>
+radar reliably measures the timing signature of the disease, an automated
+Timed-Up-and-Go, and the evaluation protocol stands as the design document
+for the richer datasets the field needs next.</li>
+</ul>
+</div>
+
+<h4>1.4 Structure of this Document</h4>
+<div class="draft">
+<p><strong>Chapter&nbsp;2</strong> reviews the state of the art: radar
+micro-Doppler as a gait sensing modality, the classification studies
+nearest to this task, and the validation pitfalls that recur throughout the
+field. <strong>Chapter&nbsp;3</strong> specifies the materials and methods:
+the dataset, the preprocessing and windowing, the classical and deep model
+families, the leave-one-subject-out protocol, and the confound-control and
+evaluation machinery, all fixed before training. <strong>Chapter&nbsp;4</strong>
+reports the results: the exploratory characterisation that constrained the
+design, the null floors, the classical and deep campaigns, the exploratory
+variants and the decision-level performance. <strong>Chapter&nbsp;5</strong>
+discusses what the results mean, demonstrates experimentally where the gap
+to the literature comes from, states the positive findings and the
+limitations, concludes, and lays out the path to stronger results. Two
+annexes cover the ethical, social, economic and environmental aspects and
+the project budget.</p>
+</div>
+</section><section id="s5" class="sec"><h2><span class="secnum">5</span>Chapter 1 &middot; Objectives</h2>
+<p class="slot">Goes into: <code>chapters/ch1_introduction/objectives.tex</code></p>
+<div class="intro"><p>Five objectives, kept exactly as the file's outline plans them so the conclusions of Chapter 5 can be mapped back one to one.</p></div>
+
+<div class="draft">
+<p>The general objective of this thesis is to determine whether Parkinson's
+disease can be classified from FMCW radar micro-Doppler gait spectrograms
+under an evaluation a clinician could trust. It is pursued through five
+specific objectives:</p>
+<ul>
+<li><strong>O1.</strong> Characterise the dataset and identify the
+confounds capable of producing spurious classification performance, before
+any model is trained.</li>
+<li><strong>O2.</strong> Establish a confound-controlled classical baseline
+under subject-independent (leave-one-subject-out) validation, including
+deliberately simple reference predictors, such as one that knows only how
+long each recording lasts, that set the score any real model must clearly
+beat.</li>
+<li><strong>O3.</strong> Develop and evaluate deep models on windowed
+micro-Doppler spectrograms, a compact convolutional network, an
+ImageNet-pretrained probe and a sequence model on velocity envelopes, under
+the identical protocol.</li>
+<li><strong>O4.</strong> Verify with interpretability methods (Grad-CAM)
+what the trained networks actually attend to, and test the finding with an
+intervention experiment rather than leaving it as a picture.</li>
+<li><strong>O5.</strong> Report every result against the explicit null
+floors with honest uncertainty, and reconcile the outcome with the
+published literature by reproducing its validation design on this same
+dataset.</li>
+</ul>
+<p>Chapter&nbsp;5 returns to these objectives one by one; the note in
+<code>conclusions.tex</code> already marks where the mapping attaches.</p>
+</div>
+</section><section id="s6" class="sec"><h2><span class="secnum">6</span>Annex A &middot; Ethical, economic, social and environmental aspects</h2>
+<p class="slot">Goes into: <code>chapters/annexes/annexA_ethics.tex &middot; sections A1&ndash;A4</code></p>
+<div class="intro"><p>The annex is mandatory (EUR-ACE/ABET) and its A1&ndash;A4 structure is fixed by the template, whose headings are in Spanish. The draft below is in English to match the body; if the school expects the annex itself in Spanish, it translates directly. It is deliberately synthetic, as the template requests.</p></div>
+
+<h4>A1. Introducci&oacute;n</h4>
+<div class="draft">
+<p>This project develops and evaluates a machine-learning system that
+screens for Parkinson's disease from contactless radar recordings of gait.
+It touches three sensitive domains at once: <strong>health data</strong>
+from a vulnerable population, <strong>clinical claims</strong> produced by
+machine-learning models, and a sensing technology whose reach into private
+spaces is precisely its selling point. The relevant dimensions are
+therefore ethical (validity of clinical claims, privacy), social (access to
+earlier screening for an ageing population), economic (low-cost monitoring
+against expensive laboratory instrumentation) and, to a lesser degree,
+environmental (computational footprint).</p>
+</div>
+
+<h4>A2. Descripci&oacute;n de impactos relevantes</h4>
+<div class="draft">
+<p>Three impacts dominate, with their stakeholders:</p>
+<ul>
+<li><strong>The validity of clinical machine-learning claims.</strong>
+Stakeholders: patients, clinicians, the research field. An overstated
+screening accuracy harms twice: false alarms send healthy people to
+neurology consultations, and false trust delays real diagnoses. This thesis
+found that the field's evaluation habits inflate performance substantially,
+and made honest evaluation its central contribution.</li>
+<li><strong>Privacy of gait data.</strong> Stakeholders: monitored persons
+and their households. Radar records no image, which is its privacy
+advantage; yet this work also measured that a person's walk identifies them
+(all 58 of 58 subjects distinguishable), so gait recordings are biometric
+data under GDPR and must be treated as such: anonymised identifiers,
+restricted access, purpose limitation. The dataset used here is fully
+anonymised and was collected under the clinical validation study of the
+source system.</li>
+<li><strong>Access and cost of motor assessment.</strong> Stakeholders:
+health systems, patients in areas without movement-disorder specialists. A
+radar Timed-Up-and-Go, the one measurement this thesis validates as
+trustworthy, is cheap, contactless and automatable, and could extend
+objective motor assessment beyond specialist clinics.</li>
+</ul>
+</div>
+
+<h4>A3. An&aacute;lisis detallado de uno de los impactos</h4>
+<div class="draft">
+<p>The impact analysed in depth is the first: <strong>what happens when
+clinical machine-learning performance is overstated</strong>, because this
+thesis measured the mechanism directly. On this very dataset, the
+evaluation design used by most published work produces subject-level AUCs
+up to 0.89; scoring the same models on people excluded from training
+returns them to a band indistinguishable from a predictor that knows only
+how long the recording lasted. A deployment decision taken on the first
+number would field a screening tool whose real behaviour on new patients is
+close to a biased guess: in the decision analysis, catching 21 of 25
+patients cost falsely flagging 18 of 33 healthy controls. The ethical
+posture adopted is therefore procedural rather than declarative:
+pre-registration of the analysis plan, subject-independent validation,
+explicit null floors beside every reported score, confidence intervals at
+the subject level, and publication of the negative result. This is the
+engineering-responsibility standard the EUR-ACE criteria ask the graduate
+to demonstrate, applied to the claim itself rather than to the artefact.</p>
+</div>
+
+<h4>A4. Conclusiones</h4>
+<div class="draft">
+<p>The project's sustainability profile is favourable: it consumes only
+modest computation (a single personal computer; no data-centre training),
+reuses an existing clinical dataset rather than collecting new one, and its
+product is methodological, a protocol that prevents overstated clinical
+claims. The sustainability criteria added genuine value: treating the
+validity of the claim as the primary ethical object is what turned an
+apparently negative result into the thesis's contribution, and the
+privacy analysis (gait as a biometric) is itself one of the work's
+findings.</p>
+</div>
+</section><section id="s7" class="sec"><h2><span class="secnum">7</span>Annex B &middot; Economic budget</h2>
+<p class="slot">Goes into: <code>chapters/annexes/annexB_budget.tex &middot; replace the template's example table</code></p>
+<div class="intro"><p>Where these numbers come from: the <strong>rates and percentages are the template's own</strong> (15 &euro;/h labour, 15 % general expenses, 6 % industrial benefit, 21 % VAT, and the 100/300 &euro; printing and binding lines all appear in the school's example table); only the <strong>quantities are estimates to confirm</strong>: 360 hours (12-ECTS TFM at 30 h/ECTS, confirmed), the computer is the author's MacBook Pro 2021 (M1 Max, 32 GB) valued at its 3.200 &euro; purchase price, and 7 months of use matches the project's actual span. The radar network and the dataset were provided by the research group at no direct cost, which the annex states, and all software used is open source.</p></div>
+
+<div class="defn"><span class="dterm">How to read the budget</span><p>The school requires the report to price the project as if a company had been hired to do it, line by line. <strong>Labour</strong> values the student's own working hours at a reference hourly rate. <strong>Material resources</strong> charge only the slice of the equipment's life the project consumed: the computer cost 3.200&nbsp;&euro; and lasts about 5 years (60 months) in accounting terms, the project used it for 7 of those months, so it charges 3.200&nbsp;&times;&nbsp;7/60&nbsp;=&nbsp;373,33&nbsp;&euro;. <strong>General expenses</strong> is a flat 15&nbsp;% surcharge standing in for everything not itemised (electricity, internet, workspace). <strong>Industrial benefit</strong> is the standard 6&nbsp;% profit margin a contractor would add on top. <strong>Consumables</strong> are the printing and binding of the report itself. VAT is then applied to the sum, exactly as on any invoice, giving the total a client would pay.</p></div>
+
+<div class="tblwrap"><table>
+<thead><tr><th>Concept</th><th>Detail</th><th>Amount</th></tr></thead><tbody>
+<tr><td><strong>Labour (direct cost)</strong></td>
+<td>360 hours (12 ECTS &times; 30 h) at 15&nbsp;&euro;/h</td>
+<td class="num">5.400,00&nbsp;&euro;</td></tr>
+<tr><td><strong>Material resources (direct cost)</strong></td>
+<td>Personal computer: MacBook Pro 2021 (M1 Max, 32&nbsp;GB), purchase
+3.200,00&nbsp;&euro;, used 7 months, amortised over 5 years. Radar network and dataset provided by the research
+group (no direct cost); software entirely open source (0&nbsp;&euro;).</td>
+<td class="num">373,33&nbsp;&euro;</td></tr>
+<tr><td><strong>General expenses (indirect)</strong></td>
+<td>15&nbsp;% over direct costs</td>
+<td class="num">866,00&nbsp;&euro;</td></tr>
+<tr><td><strong>Industrial benefit</strong></td>
+<td>6&nbsp;% over direct + indirect costs</td>
+<td class="num">398,36&nbsp;&euro;</td></tr>
+<tr><td><strong>Consumables</strong></td>
+<td>Printing (100,00&nbsp;&euro;) and binding (300,00&nbsp;&euro;)</td>
+<td class="num">400,00&nbsp;&euro;</td></tr>
+<tr><td><strong>Subtotal</strong></td><td></td>
+<td class="num"><strong>7.437,69&nbsp;&euro;</strong></td></tr>
+<tr><td><strong>VAT (21&nbsp;%)</strong></td><td></td>
+<td class="num">1.561,92&nbsp;&euro;</td></tr>
+<tr><td><strong>TOTAL</strong></td><td></td>
+<td class="num"><strong>8.999,61&nbsp;&euro;</strong></td></tr>
+</tbody></table></div>
+
+<div class="defn"><span class="dterm">Transcription note</span><p>The LaTeX annex keeps the template's own table layout (the school's expected format); only the example numbers are replaced by the ones above. The 'Otro equipamiento' row becomes the radar-network line with an explicit zero direct cost and a footnote that the hardware belongs to the research group's clinical validation study.</p></div>
+</section></main>
+</div>
+<button id="top" title="Back to top">&uarr;</button>
+<script>
+const bar=document.getElementById('bar'),top=document.getElementById('top');
+const links=[...document.querySelectorAll('nav.toc a[href^="#s"]')];
+const secs=links.map(a=>document.getElementById(a.getAttribute('href').slice(1)));
+function upd(){const h=document.documentElement;
+ bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+'%';
+ top.classList.toggle('show',h.scrollTop>600);
+ let i=0;secs.forEach((s,k)=>{if(s&&s.getBoundingClientRect().top<160)i=k;});
+ links.forEach((a,k)=>a.classList.toggle('on',k===i));}
+addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
+top.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body></html>

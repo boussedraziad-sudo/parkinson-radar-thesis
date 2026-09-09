@@ -143,6 +143,86 @@ handcrafted-feature level, which is exactly the gap the windowed CNN should
 close. The earlier "p = 0.092, ~chance" reading was an artifact of testing
 duration-entangled features; proper confound control flips it to significant.
 
+## 3bb. 🔴 CRITICAL — an acquisition-batch confound invalidates the "weak but real" reading
+
+*Discovered and independently verified 2026-07-29. This supersedes the optimistic
+conclusion in §3b. Batch labels cached in `outputs/metrics/acquisition_batch.csv`.*
+
+**What was found.** The 348 `.mat` files contain **exactly two distinct Doppler
+axes**, differing in the 4th decimal place:
+
+| Batch | `doppler_min` | Trials | Subjects |
+|---|---|---|---|
+| **A** | −794.8713989257812 | 203 | 34 |
+| **B** | −794.872802734375 | 145 | 24 |
+
+This is an **acquisition/session signature** — a different processing or hardware
+configuration. **All 58 subjects are pure with respect to batch** (every trial of
+a subject comes from the same batch), so batch is a *subject-level* property.
+
+**Why it is fatal to the current headline.** Batch is confounded with diagnosis:
+
+| Batch | control | PD | % PD |
+|---|---|---|---|
+| A | 24 | 10 | **29.4 %** |
+| B | 9 | 15 | **62.5 %** |
+
+> ### 🔑 **Batch membership ALONE gives subject-level AUC = 0.664**
+> That is **higher than every feature-based model in the entire baseline grid** —
+> higher than the 0.621 `shape_clean` headline and the 0.610 `duration_only` floor.
+
+**The decisive test — re-run the exact LOSO baseline *within* each batch:**
+
+| Feature set | pooled | batch A | batch B |
+|---|---|---|---|
+| `all_features` | 0.633 | 0.604 | **0.467** |
+| `duration_invariant` | 0.627 | 0.567 | **0.496** |
+| **`shape_clean`** | **0.621** | **0.537** | **0.541** |
+| `duration_only` | 0.610 | **0.642** | **0.659** |
+
+**The spectrogram-derived gait features collapse to chance inside a batch.** The
+apparent "weak but real gait signal" of §3b was, to a large extent, the model
+detecting **which acquisition batch a subject came from**.
+
+**The one thing that survives — and it matters.** `duration_only` does *not*
+collapse; it **strengthens** within batch (0.642 / 0.659), and PD trials are
+longer inside *both* batches (A: 8.93→9.74 s; B: 7.81→8.91 s). So **walking
+slowly is a genuine, batch-robust PD marker** — arguably bradykinesia — while the
+handcrafted *spectral-shape* features are not.
+
+**Why no existing control caught it.** Duration matching, duration
+residualization and the test2-only split **all leave batch fully intact**. Batch
+is orthogonal to every confound tested so far.
+
+**It also explains the error pattern.** The classifier's prediction matches batch
+membership for ~55/58 subjects; all 9 batch-B controls are misclassified as PD,
+and 9 of the 10 batch-A PD subjects are misclassified as control. That is why
+§3c's errors are "confident" rather than borderline, and why the subject-score
+distribution is bimodal — the bimodality in `eda_pca.png` (PC1 = 62 % of variance)
+**is the batch split**, not the disease.
+
+### Honest caveats
+- **Within-batch n is small** (34 and 24 subjects). "Chance-level" is also
+  consistent with *"a weak signal that is undetectable at this n."* Do not
+  over-claim a negative.
+- **Batch may not be purely technical.** With no demographics table, the two
+  batches could be two recruitment campaigns differing in **age** — which the
+  literature flags as the dominant confound (radar separates young vs elderly at
+  94.9 %). Then this is a *clinical* confound, not a hardware artifact. Either
+  way it is uncontrolled.
+
+### Required actions
+1. **Report `batch_only` (AUC 0.664) as a second null floor**, alongside
+   `duration_only` (0.610), in every results table.
+2. **Report within-batch AUC as the headline number**, not the pooled one.
+3. **Ask the data provider** (Ignacio López-Delgado, `ie.lopez@upm.es`) what the
+   two batches are: capture dates, sessions, hardware/firmware or processing
+   changes, and whether recruitment differed. `param.DestinationPath` in the
+   `.mat` files may carry capture dates — extract them.
+4. Add **batch** to the confound battery for **every** model, including the CNN.
+
+---
+
 ## 3c. Diagnostics — robustness & error analysis
 
 `src/diagnostics.py` (run: `.venv/bin/python -m src.diagnostics`) stress-tests
@@ -175,12 +255,20 @@ conclusions to the current n=58.
 
 Two independent reasons, both now evidence-backed:
 
-- **Fixed-length windows remove the duration confound by construction.** The
+- **Fixed-length windows weaken (but do NOT remove) the duration confound.** The
   preprocessing pipeline (`src/preprocessing.py`) cuts every trial into 3 s
   windows. A window has the same length whether it came from a 9 s or a 19 s
-  trial, so duration cannot leak into a per-window model. The CNN therefore
-  learns from gait micro-structure, not trial length — exactly the confound the
-  baseline exposed.
+  trial, so duration cannot leak *within* a window.
+  > 🔴 **Correction (2026-07-29).** An earlier version of this section claimed
+  > windowing removes the confound "by construction." **That is false, and it was
+  > verified empirically:** longer trials produce *more* windows — control **27.3**
+  > vs PD **30.9** windows per subject (ratio 1.13) — and **window count alone
+  > yields subject-level AUC 0.621**, i.e. the same level as the classical
+  > baseline. Windowing decorrelates sample *length* from label, **not the number
+  > of samples per subject**.
+  > **Required control:** cap windows per subject at K (or weight the loss by
+  > `1/n_windows`), and report the **0.621 window-count floor** as the deep
+  > track's null floor, exactly as `duration_only`=0.610 is the classical floor.
 - **Spatial micro-Doppler structure is discarded by the summaries.** The
   reference paper (López-Delgado et al.) shows the PD signal lives in the
   *shape* of the foot/torso Doppler signatures over the gait cycle — heel-strike

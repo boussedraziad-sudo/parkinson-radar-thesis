@@ -1,0 +1,73 @@
+\normalsize{El apartado ``Requisitos de las acreditaciones internacionales EUR-ACE y ABET'' de la Normativa de TFT de la ETSIT-UPM establece que ``\textit{La memoria del TFT del GITST, GIB y MUIT, y en general la de aquellas titulaciones que hayan obtenido o para las que se desee solicitar una acreditación internacional EUR-ACE o ABET, debe mostrar conciencia de la responsabilidad de la aplicación práctica de la ingeniería, el impacto social y ambiental, el compromiso con la ética profesional, la responsabilidad y las normas de la aplicación práctica de la ingeniería, así como sobre las prácticas de gestión de proyectos, gestión, y control de riesgos, entendiendo sus limitaciones}''.}
+\vspace{0.1cm}
+
+\section*{A1. Introducci\'on}
+\normalsize{This project develops and evaluates a machine-learning system
+that screens for Parkinson's disease from contactless radar recordings of
+gait. It touches three sensitive domains at once: \textbf{health data} from
+a vulnerable population, \textbf{clinical claims} produced by
+machine-learning models, and a sensing technology whose reach into private
+spaces is precisely its selling point. The relevant dimensions are
+therefore ethical (validity of clinical claims, privacy), social (access to
+earlier screening for an ageing population), economic (low-cost monitoring
+against expensive laboratory instrumentation) and, to a lesser degree,
+environmental (computational footprint).}
+\vspace{0.3cm}
+
+\section*{A2. Descripci\'on de impactos relevantes relacionados con el proyecto}
+\normalsize{Three impacts dominate, each with its stakeholders:
+
+\begin{itemize}
+  \item \textbf{The validity of clinical machine-learning claims.}
+        Stakeholders: patients, clinicians, the research field. An
+        overstated screening accuracy harms twice: false alarms send
+        healthy people to neurology consultations, and false trust delays
+        real diagnoses. This thesis found that the field's evaluation
+        habits inflate performance substantially, and made honest
+        evaluation its central contribution.
+  \item \textbf{Privacy of gait data.} Stakeholders: monitored persons and
+        their households. Radar records no image, which is its privacy
+        advantage; yet this work also measured that a person's walk
+        identifies them (all 58 of 58 subjects distinguishable), so gait
+        recordings are biometric data under the GDPR and must be treated as
+        such: anonymised identifiers, restricted access, purpose
+        limitation. The dataset used here is fully anonymised and was
+        collected under the clinical validation study of the source
+        system.
+  \item \textbf{Access and cost of motor assessment.} Stakeholders: health
+        systems, patients in areas without movement-disorder specialists. A
+        radar Timed-Up-and-Go, the one measurement this thesis validates as
+        trustworthy, is cheap, contactless and automatable, and could
+        extend objective motor assessment beyond specialist clinics.
+\end{itemize}}
+\vspace{0.1cm}
+
+\section*{A3. An\'alisis detallado de alguno de los impactos}
+\normalsize{The impact analysed in depth is the first: \textbf{what happens
+when clinical machine-learning performance is overstated}, because this
+thesis measured the mechanism directly. On this very dataset, the
+evaluation design used by most published work produces subject-level
+scores that look clinic-ready; scoring the same models on people excluded
+from training returns them to a band indistinguishable from a predictor
+that knows only how long the recording lasted. A deployment decision taken
+on the first number would field a screening tool whose real behaviour on
+new patients is close to a biased guess: when the field's own network was
+scored on unseen people (Section~\ref{sec:disc-alexnet}), catching
+21 of 25 patients cost falsely flagging 18 of 33 healthy controls. The
+ethical posture adopted is therefore procedural rather than declarative:
+pre-registration of the analysis plan, subject-independent validation,
+explicit null floors beside every reported score, confidence intervals at
+the subject level, and publication of the negative result. This is the
+engineering-responsibility standard the EUR-ACE criteria ask the graduate
+to demonstrate, applied to the claim itself rather than to the artefact.}
+\vspace{0.3cm}
+
+\section*{A4. Conclusiones}
+\normalsize{The project's sustainability profile is favourable: it consumes
+only modest computation (a single personal computer; no data-centre
+training), reuses an existing clinical dataset rather than collecting a new
+one, and its product is methodological, a protocol that prevents overstated
+clinical claims. The sustainability criteria added genuine value: treating
+the validity of the claim as the primary ethical object is what turned an
+apparently negative result into the thesis's contribution, and the privacy
+analysis (gait as a biometric) is itself one of the work's findings.}

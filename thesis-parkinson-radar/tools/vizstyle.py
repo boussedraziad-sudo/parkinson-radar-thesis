@@ -74,12 +74,15 @@ def apply() -> None:
     })
 
 
-def title(ax, main: str, sub: str | None = None) -> None:
+def title(ax, main: str, sub: str | None = None, sub_size: float = 9.8,
+          pad: float | None = None) -> None:
     """Bold title with an optional muted second line, laid out above the axes."""
-    ax.set_title(main, loc="left", pad=20 if sub else 12)
+    if pad is None:
+        pad = 20 if sub else 12
+    ax.set_title(main, loc="left", pad=pad)
     if sub:
         ax.text(0, 1.035, sub, transform=ax.transAxes, ha="left", va="bottom",
-                fontsize=9.8, color=INK_2, style="italic")
+                fontsize=sub_size, color=INK_2, style="italic")
 
 
 def note(ax, x, y, text, color=None, **kw):

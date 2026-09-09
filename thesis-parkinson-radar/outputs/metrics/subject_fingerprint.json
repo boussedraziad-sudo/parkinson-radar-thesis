@@ -1,0 +1,43 @@
+{
+  "n_subjects": 58,
+  "n_features": 17,
+  "within_median": 1.811,
+  "between_median": 4.593,
+  "ratio_median": 0.378,
+  "n_identifiable": 58,
+  "times_more_alike": 2.54,
+  "examples": {
+    "strongest": {
+      "id": "fisp_027",
+      "group": "pd",
+      "within": 0.96,
+      "between": 6.67,
+      "times": 7.0,
+      "caption": "most distinctive"
+    },
+    "typical": {
+      "id": "fisp_042",
+      "group": "pd",
+      "within": 1.83,
+      "between": 4.83,
+      "times": 2.6,
+      "caption": "typical"
+    },
+    "weakest": {
+      "id": "fisp_022",
+      "group": "pd",
+      "within": 3.94,
+      "between": 4.81,
+      "times": 1.2,
+      "caption": "least distinctive"
+    },
+    "variable": {
+      "id": "fisc_041",
+      "group": "control",
+      "within": 6.87,
+      "between": 9.34,
+      "times": 1.4,
+      "caption": "most variable"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "model": "logreg|shape_clean|duration_residualized",
+  "model": "logreg|shape_clean|duration-residualized",
   "observed_auc": 0.6763636363636364,
   "p_value": 0.02197802197802198,
   "n": 1000

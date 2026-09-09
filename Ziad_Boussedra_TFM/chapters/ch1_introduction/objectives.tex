@@ -1,0 +1,31 @@
+\section{Objectives}
+\label{sec:objectives}
+
+The general objective of this thesis is to determine whether Parkinson's
+disease can be classified from FMCW radar micro-Doppler gait spectrograms
+under an evaluation a clinician could trust. It is pursued through five
+specific objectives:
+
+\begin{itemize}
+  \item \textbf{O1.} Characterise the dataset and identify the confounds
+        capable of producing spurious classification performance, before
+        any model is trained.
+  \item \textbf{O2.} Establish a confound-controlled classical baseline
+        under subject-independent (leave-one-subject-out) validation,
+        including deliberately simple reference predictors, such as one
+        that knows only how long each recording lasts, that set the score
+        any real model must clearly beat.
+  \item \textbf{O3.} Develop and evaluate deep models on windowed
+        micro-Doppler signatures: a compact convolutional network, a
+        pretrained ResNet-18 with a retrained final layer, and a sequence
+        model on velocity envelopes, under the identical protocol.
+  \item \textbf{O4.} Verify with interpretability methods (Grad-CAM) what
+        the trained networks actually attend to, and test the finding with
+        an intervention experiment rather than leaving it as a picture.
+  \item \textbf{O5.} Report every result against the explicit null floors
+        with honest uncertainty, and reconcile the outcome with the
+        published literature by reproducing its validation design on this
+        same dataset.
+\end{itemize}
+
+The conclusions of Chapter~\ref{ch:discussion} return to these objectives one by one.

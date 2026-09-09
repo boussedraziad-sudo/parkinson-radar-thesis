@@ -1,0 +1,54 @@
+% =====================================================================
+% Chapter 5, part 2: Conclusions. Each paragraph carries the objectives
+% of Section 1 (sec:objectives) it closes, in parentheses.
+% =====================================================================
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+This thesis set out to determine whether Parkinson's disease can be detected
+from the micro-Doppler gait signatures of a validated clinical radar
+network, and to do so under an evaluation a clinician could trust: every
+subject scored by a model that had never seen them. Five conclusions follow
+from the work; each notes, in parentheses, the objectives of
+Section~\ref{sec:objectives} it closes.
+
+\textbf{A complete, pre-registered pipeline was built and frozen before the
+results were known} (O2, O3). Preprocessing, windowing, model families,
+hyperparameters, validation and statistics were fixed in advance
+(Chapter~\ref{ch:methods}), so every number reported in Chapter~\ref{ch:results} is the first and only
+answer the protocol gave, not the best of many attempts.
+
+\textbf{Under subject-independent validation, no classifier was
+distinguishable from recording duration alone} (O1, O5). Classical models, a compact
+CNN, the ImageNet probe, a sequence model on velocity envelopes, and
+the field's own AlexNet all land in a band whose confidence intervals
+contain the duration floor of 0.610 (Sections~\ref{sec:res-baselines},
+\ref{sec:res-deep} and~\ref{sec:disc-alexnet}). The attention analysis and the
+background-suppression experiment attribute the remaining score to
+per-recording character rather than to gait shape
+(Sections~\ref{sec:disc-attention} and~\ref{sec:disc-intervention}).
+
+\textbf{The gap to the literature was reproduced, not just alleged} (O5).
+With the validation design relaxed to the field's random hold-out, the same data
+and networks produce subject-level AUCs up to 0.89 that collapse on people
+excluded from training (Sections~\ref{sec:disc-protocol}
+and~\ref{sec:disc-alexnet}). The published
+numbers answer a recognition question; the clinical question demands
+subject-independent evaluation, and this thesis provides, to the best of our
+knowledge, the first such evaluation for radar-based Parkinson's
+classification.
+
+\textbf{One clinically sensible signal survives} (O1). Patients take measurably
+longer, with the excess concentrated in standing up and turning; radar
+measures this timing reliably, which amounts to an automated
+timed-up-and-go measurement (Section~\ref{sec:disc-positive}). It is a
+modest signal, but it is real, interpretable, and it is exactly what the
+source system was validated to measure.
+
+\textbf{The negative result is the contribution} (O4). This work demonstrates,
+on validated clinical hardware, precisely how radar gait classifiers come to
+look better than they are, provides the protocol that prevents it, and
+states which signals in this dataset are exhausted and which were never
+testable. Whatever signal richer data holds, the standard defended here will
+measure it honestly, on people the model has never seen.

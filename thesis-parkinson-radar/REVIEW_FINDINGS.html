@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thesis Review Findings &middot; status tracker</title>
+<style>
+:root{--ink:#1c1e21;--ink2:#4a4f57;--ink3:#8a919c;--line:#e4e7ec;--surface:#f6f7f9;--accent:#c2410c;--good:#15803d;--warn:#b45309;--bad:#b91c1c;--serif:Georgia,'Times New Roman',serif;--sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;font-family:var(--serif);color:var(--ink);background:#fff;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding:40px 28px 90px}
+.kicker{font-family:var(--sans);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 6px}
+h1{font-size:38px;margin:0 0 10px}
+.sub{font-size:16.5px;color:var(--ink2);max-width:820px}
+h2{font-size:24px;margin:54px 0 6px;padding-top:18px;border-top:2px solid var(--ink)}
+h3{font-family:var(--sans);font-size:15px;margin:26px 0 6px}
+ul{padding-left:22px}li{margin:7px 0;font-size:15px}
+.st{display:inline-block;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:99px;margin-right:7px;vertical-align:1px}
+.done{background:#dcfce7;color:var(--good)}
+.dec{background:#fffbeb;color:var(--warn);border:1px solid #fde68a}
+.open{background:var(--surface);color:var(--ink3)}
+.note{background:var(--surface);border-left:4px solid var(--good);padding:12px 20px;border-radius:0 9px 9px 0;margin:18px 0;font-size:15.5px}
+.decision{background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:12px 18px;margin:12px 0}
+.decision p{margin:6px 0;font-size:15px}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0;font-family:var(--sans)}
+.stat{border:1px solid var(--line);border-radius:9px;padding:10px 18px;text-align:center}
+.stat b{display:block;font-size:26px}
+.stat span{font-size:12px;color:var(--ink3)}
+code{font-size:13px;background:var(--surface);padding:1px 5px;border-radius:4px}
+.pg{font-family:var(--sans);font-size:11.5px;font-weight:700;background:var(--ink);color:#fff;padding:2px 8px;border-radius:99px;margin-right:6px}
+</style></head><body><div class="wrap">
+
+<p class="kicker">Master's thesis &middot; review worklist &middot; updated after fix rounds 1&ndash;4 and the supervisor's annotated draft (9 Sep)</p>
+<h1>Review Findings &mdash; status</h1>
+<p class="sub">The 12-reviewer findings, now tracked. <span class="st done">FIXED</span> means applied
+and recompiled; <span class="st dec">DECISION</span> means it waits on your call;
+<span class="st open">OPEN</span> means known, not yet applied. Page numbers refer to the
+version the reviewers read and have shifted slightly since.</p>
+
+<div class="stats">
+<div class="stat"><b>~105</b><span>fixed</span></div>
+<div class="stat"><b>2</b><span>decisions for you</span></div>
+<div class="stat"><b>~13</b><span>open (see &sect;7)</span></div>
+</div>
+
+<div class="note"><strong>Overall verdict (unchanged):</strong> every reviewer independently rated the
+thesis at or near examiner-ready; all headline numbers verify against the stored results. The list
+below is polish, not surgery.</div>
+
+<h2>1 &middot; Must-fix content</h2>
+<ul>
+<li><span class="st done">FIXED</span><span class="pg">p. 12</span><b>Blocker:</b> <code>ce_foot</code>
+described as "from the ankle-height node" &mdash; corrected: each channel is a per-frame max-SNR
+<b>combination of the two same-height nodes</b> (one Doppler axis flipped), per the source paper,
+and the per-node arrays are noted as also present in the files.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 15</span>Hardware contradiction (4 nodes vs
+"2 / 1"): rig stated as four nodes; the 2/1 row rewritten as the storage format of the combined
+channels.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 22</span>"320 &times; 1000" vs 320 &times;
+12,000 &mdash; corrected (and the whole offending paragraph was later removed with Table 3.3 at your
+request).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 10/14</span>23 vs 24 GHz: 23 GHz labelled as
+the sweep start of the 24 GHz band; the &asymp;3 % wavelength approximation acknowledged and
+"exact" softened.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 15</span>The 20 Hz "true resolution"
+claim: Table 3.2 line now says the 50 ms Hann window separates components roughly 30 Hz apart
+(20 Hz is the ideal-window figure); the dependent "four bins" paragraph is gone with Table 3.3.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 19</span>The mathematically false log1p
+"ratios into distances" sentence &mdash; removed along with the deleted &sect;3.3.2; the compression
+is now stated correctly in one line of the pipeline-stages table.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 25</span>Inverted Benjamini&ndash;Hochberg
+justification &mdash; rewritten: familywise control is valid under any dependence but needlessly
+conservative; BH's guarantee holds under positive dependence.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 32</span>Under-specified inner loop &mdash;
+the seeded, deterministic, stratified selection of the 8 inner-validation subjects and the
+epoch-selection metric (subject-level AUC on the inner group) are now stated.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 31</span>Hindsight-flavoured "retrained
+under a random split" sentence in the methods &mdash; timeline made explicit: a post-hoc diagnostic
+run after the freeze, reported in the discussion.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 32</span>Unstated classical
+hyperparameters &mdash; fixed settings now named (library defaults, versioned, archived frozen
+configuration).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 41</span>"The further from elapsed time,
+the worse" contradiction &mdash; claim restricted to the four multi-feature sets, with
+<code>duration_only</code> explained as the capacity-limited single scalar.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 41</span>SVM 0.287 below chance &mdash;
+footnote added diagnosing the single-feature RBF calibration pathology.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 43</span>Marginal CIs cannot show
+equivalence &mdash; closed by your call (5 Sep): the paired bootstrap is <b>not run</b>; the
+softened "no configuration is shown to exceed the floor" wording stands as the final text.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 47</span>"0.2 to 0.3 AUC" untraceable &mdash;
+now states the actual derivation (roughly 0.2 on average, up to 0.4 in single repeats).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 7</span>"Hayashi/Saho et al." naming and
+the 97.8 % source &mdash; verified against the paper (5 Sep): the 97.8 % AlexNet <b>is</b>
+hayashi2021's own comparison experiment (their &sect;4.3), their own Grad-CAM attributes it to
+background components ("the CNN positively used this difference of background noises"), and their
+LSTM's 94.9 % and the 7:3 &times; 30 hold-out check out too. Naming corrected to
+<b>"Hayashi et al."</b> (first author Sora Hayashi) in all three places.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 7</span>Ch2's "radar measures velocity
+least reliably" self-contradiction &mdash; restricted to gait variability and geometry-dependent
+joint velocities.</li>
+</ul>
+
+<h2>2 &middot; Layout</h2>
+<ul>
+<li><span class="st done">FIXED</span>Orphan "2026" pages after both covers (covers compacted; year
+sits on the cover).</li>
+<li><span class="st done">FIXED</span>Duplicate roman page numbers (counter restored after the second
+cover; each printed number now unique).</li>
+<li><span class="st done">FIXED</span>GDPR "extit" raw-LaTeX leak in the acronym list.</li>
+<li><span class="st done">FIXED</span>Floats severing sentences at page turns (pp. 19, 28&ndash;31,
+46&ndash;49) &mdash; every figure and table in Chapters 3&ndash;5 is now anchored [H] at its logical
+position, so no exhibit can interrupt a sentence.</li>
+<li><span class="st done">FIXED</span>"Three observations carry the section:" separated from its
+bullets by a float page &mdash; anchored; lead-in and list stay together.</li>
+<li><span class="st done">FIXED</span>Table 3.2 alone on a half-empty float page &mdash; anchored
+inline.</li>
+<li><span class="st done">FIXED</span>Table 2.1 blocking a half-empty page &mdash; moved to a proper
+dedicated float page ([p]) so the following section text flows.</li>
+<li><span class="st done">FIXED</span>Grad-CAM galleries' 4&ndash;5 pt panel titles &mdash;
+regenerated with &ge;10&ndash;12 pt fonts (same windows, same maps).</li>
+<li><span class="st done">FIXED</span>Tiny annotations in the pipeline/setup figures and the raw
+matplotlib styling of the EDA figures &mdash; regenerated with legible fonts and house styling; the
+setup figure's wrong "one trunk node, two feet nodes" annotation also corrected to the four-node
+rig. <b>Two exceptions</b> could not be regenerated because no generator script exists anywhere in
+the repo: <code>guide_data_explained.png</code> (Fig. 3.3, small ticks and an internal em-dash
+remain) and <code>pipe_turn_v2.png</code> (the 0.05-threshold note stays small) &mdash; both are
+one-off manual figures; recreating them faithfully needs a decision.</li>
+<li><span class="st done">FIXED</span>Figure 5.1's too-light connector lines / coinciding dots &mdash;
+redrawn darker and separable.</li>
+<li><span class="st done">FIXED</span>Committee page: signature dotted lines now render; the
+supervisor's name no longer abuts the label; the "ETSIT --- Universidad" em-dash removed.</li>
+<li><span class="st done">FIXED</span>Hyphenated display headings &mdash; and, per your global rule,
+<b>hyphenation is now disabled document-wide</b>; the three headings that depended on it were given
+manual breaks. Compile shows zero overfull lines.</li>
+<li><span class="st done">FIXED</span>List of Figures/Tables reprinting full captions &mdash; every
+long caption has a short LOF/LOT title.</li>
+<li><span class="st done">FIXED</span>Widow/orphan lines (global penalties set).</li>
+<li><span class="st done">FIXED</span>Uneven float-page slack between Figures 4.9/4.10 (float-page
+glue balanced).</li>
+<li><span class="st done">FIXED</span>Table 4.4 monospace headers wrapping with trailing
+underscores &mdash; set names now on one line each.</li>
+<li><span class="st done">FIXED</span>Abstract page's empty chapter heading removed; Annex A's
+hand-painted orange headings replaced with real section headings; Annex B's caption moved above the
+table with a final period.</li>
+<li><span class="st done">FIXED</span>Running-header page number on the gutter edge if printed
+two-sided &mdash; closed by your call (5 Sep): ignored; single-sided layout kept as is.</li>
+<li><span class="st open">OPEN</span>Table B.1 kept in the school template's ruled style rather than
+booktabs &mdash; deliberate (it is the school's own example format); flip it if you prefer visual
+consistency over template fidelity.</li>
+</ul>
+
+<h2>3 &middot; Content minors</h2>
+<ul>
+<li><span class="st done">FIXED</span>Abstract hedging ("to the best of our knowledge", ES and EN),
+the unhedged claims in &sect;1.2 and Contribution 1, and the "floored" coinage.</li>
+<li><span class="st done">FIXED</span>&sect;2.7 skipped in the chapter roadmap; "probe" jargon in O3;
+Table 2.1's "radar gait intelligence" phrasing (rewritten as concrete bullets).</li>
+<li><span class="st done">FIXED</span>Your round-3 list: simpler words for
+<i>nascent, hallmark, sparse, prone to keying, pervasive, insidious, methodological rigour, coarse,
+corpus, consequential omission</i>; LSTM named in &sect;2.3; the shortcut-learning sentence
+explained; "trustworthy part vs diagnostic part" rewritten; Table 2.1 cells cut to &le;3 bullets;
+the duplicated gap claim removed from &sect;2.8 (kept in Chapter 1); the 56-of-58 sentence made
+explicit; QC and &sect;3.2.3 shortened ("cheapest first" deleted); Table 3.3 + paragraph deleted;
+&sect;3.2.4 take stated directly; heel strike glossed; &sect;3.2.6 illustrated with the new
+coupling figure; &sect;3.3 restructured (sentence &rarr; figure &rarr; stage table);
+&sect;3.3.2 deleted; windowing figure anchored in place; chapter references now clickable;
+a Closing Remarks section added after Future Work.</li>
+<li><span class="st done">FIXED</span>Your round-4 list (5 Sep): Figure 3.2 regenerated with every
+box text inside its box (lines rebroken, boxes widened); &sect;3.3's opener no longer
+forward-references Sections 3.4/3.7; the fold-definition paragraph moved between Figure 3.5 and
+Table 3.3; the "mean over all of its pixels" sentence and the whole mean-vs-sum paragraph deleted
+from &sect;3.4; &sect;3.5 kept (p and &delta; appear in nearly every Chapter-4 exhibit) with a new
+one-line justification opening it; "repeated once per fold" &rarr; "once for each subject in turn";
+"(RBF)" dropped from the SVM row; &sect;3.7.1 restructured figure-first (Figure 3.12 now precedes
+its explanation).</li>
+<li><span class="st open">OPEN</span>Ch4 wording minors: &delta;=0.278 called "small-to-moderate";
++10.1 % vs displayed medians; "2.5 times more alike" phrasing; mean/median/typical inconsistency
+around Figure 4.5; turn-ablation interpretation stated as fact; "twice as strongly" without a
+number; foot-only CI not in Table 4.6; "best deep model" ambiguity; "no other threshold would do
+better" overclaim.</li>
+<li><span class="st open">OPEN</span>Ch5 wording minors: Table 5.1 row-3 label and unit footnote;
+AlexNet convention-change objection pre-empt; "mechanism of every score" scoping; frozen-probe
+causal phrasing ("near-identical"); "best validation epoch averages 0.9" misread; Table 5.4 "walk
+identifies the walker" headline vs evidence; garden-path opening sentence; register flourishes.</li>
+<li><span class="st open">OPEN</span>Ch1/Ch3 leftovers: four-vs-three deep families count (announce
+AlexNet in &sect;3.7 or reword); radial-velocity cos&thinsp;&theta; caveat; windowing tail claim
+("every moment appears in at least one window"); stride-time citation; "Rhythmicity rises" gloss;
+within-vs-between distance commensurability; parameters&gt;windows rule condemning SmallCNN;
+Figure 3.11's 200k vs 400k annotation; prevalence threshold vs class weighting stacking; capacity-check
+outcome never reported; 52 %-energy statistic framing; "session-balanced" antecedent (tied to the
+archived session topic &mdash; recommend deleting the phrase).</li>
+<li><span class="st open">OPEN</span>Annex minors: "the decision analysis" attribution; "validates as
+trustworthy" overstatement; budget CD base row.</li>
+</ul>
+
+<h2>4 &middot; Bibliography batch (one sitting, still pending)</h2>
+<ul>
+<li><span class="st open">OPEN</span>Brace-protect downcased title acronyms ({Grad-CAM}, {FMCW},
+{CNN}, {ADRD}, {DNN}, {ACGAN}, {Doppler}, {Bayesian}, {STRIDE}).</li>
+<li><span class="st open">OPEN</span>Normalise locators to one style (publisher DOI); drop
+PMC/ResearchGate aggregator links.</li>
+<li><span class="st open">OPEN</span>Replace the two stale "accepted to IEEE TAES" arXiv entries
+with the published versions; check Seifert's arXiv similarly.</li>
+<li><span class="st open">OPEN</span>Complete hayashi2021 (volume/pages); fix ref [9]'s open-access
+note.</li>
+</ul>
+
+<h2>5 &middot; Decisions that are yours</h2>
+<div class="decision"><p><b>1. "Session-balanced" in Future Work</b> &mdash; delete the phrase (recommended,
+consistent with the pooled-only framing) or reinstate a session limitation row.</p></div>
+<div class="decision"><p><b>2. Annex language</b> &mdash; one convention for A and B (ask the school).</p></div>
+<p><i>Closed on 5 Sep by your call:</i> the paired bootstrap (declined &mdash; softened wording
+stands), the 97.8 % source (verified in the paper, naming fixed), and the two-sided header-folio
+question (ignored, single-sided kept).</p>
+
+<h2>6 &middot; Supervisor's annotated draft (9 Sep) &mdash; 24 comments, all resolved</h2>
+<p class="sub">Extracted programmatically from the PDF annotation layer of
+<code>ZIAD_THESIS_FIRST_DRAFT_reviews.pdf</code> (16 sticky notes, 7 highlights, 1 strike-out, 1
+underline), mapped to the passages they mark, and applied. New literature was located and added
+to the bibliography for every technique he suggested (13 new references).</p>
+<ul>
+<li><span class="st done">FIXED</span><span class="pg">p. 4</span>Resumen and Summary: "espectrograma
+micro-Doppler / imagen de las velocidades" &rarr; "firma micro-Doppler, una imagen tiempo-frecuencia que
+integra el movimiento de todas las partes del cuerpo y de la que pueden extraerse las velocidades"
+(and the English mirror); "sobre estos espectrogramas" &rarr; "sobre estas firmas".</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 6</span>Acknowledgements: GAPS &rarr; GMR.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 14</span>"Always uppercase to start bullet
+points": all 47 lowercase-initial items capitalised across every chapter; the two variant names keep
+their identifiers ("Variant test1, ...").</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 17</span>&sect;2.2.1 now says the network was
+developed "in collaboration with the Hospital General Universitario Gregorio Mara&ntilde;&oacute;n de
+Madrid"; Vicon reference added (Merriaux et al., Sensors 2017).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 17&ndash;18</span>State of the art ends with
+limitations and gaps: &sect;2.6 renamed "Limitations of the state of the art in the field" (his
+wording); &sect;2.8's third conclusion now enumerates the recurring limitations (random hold-outs,
+shortcut learning, cohorts of 3&ndash;22 subjects, uncontrolled age, no radar PD classifier).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 18</span>Accuracies of the reviewed works now
+stated in the prose (Nguyen 96&ndash;99 %, Ha 97.9 %, Fard 89.7 % LOPO, Seyfio&#287;lu 97 vs 86 %, Park
+80.3 %, Erol 84&rarr;93 %, Meral &amp; Ozbilgin 99.4 %) with a closing sentence that hands them to the
+limitations section.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 19</span>Intra- vs inter-patient variability
+sentence added to the subject-leakage bullet: systems evaluated on seen people only master the first
+and are never shown to model the second, hence fail on new patients.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 19</span>"Spectrogram CNNs" &rarr; "CNNs
+trained on micro-Doppler images" (and "any spectrogram network" &rarr; "any network trained on these
+images").</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 21</span>"foot and torso Doppler bands"
+&rarr; kept as the band names; the gloss was already "feet" in the body text.</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 30</span>Coupling figure regenerated: both
+traces now drawn ON the signature at their true Doppler values &mdash; the upper contour of the foot
+arches (valleys = foot planted) and the trunk-speed trace on the torso band (peaks) &mdash; instead of
+offset timing strips; caption and body text updated (valley-to-peak offsets 45&ndash;76 ms).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 32</span>"raw spectrogram magnitudes" &rarr;
+"raw STFT magnitudes"; the 3.0 s window now stated as fixed a priori, with AUC-driven tuning named as
+future work (also a row in the new future-work table).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 34</span>"the most windows" &rarr; "more
+windows".</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 36</span>"A spectrogram is a grid" &rarr; "A
+micro-Doppler signature is a grid"; "The features divide" &rarr; "are divided".</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 39</span>p now appears in an equation
+(Eq. 3.3: p = Pr<sub>H0</sub>(|U &minus; n<sub>1</sub>n<sub>2</sub>/2| &ge; |u &minus; n<sub>1</sub>n<sub>2</sub>/2|)).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 67, 70</span>New Table 5.7 "Future work:
+methodological improvements suggested at review": attention-guided masking (Li et al. CVPR 2018,
+GAIN), explanation regularisation / Right for the Right Reasons (Ross et al. IJCAI 2017; Rieger et
+al. ICML 2020), counterfactual training (Kaushik et al. ICLR 2020), adaptive background thresholding
+(Li et al. Sci. Rep. 2023), encoder bottleneck + classifier with t-SNE/UMAP inspection (Seyfio&#287;lu
+et al. TAES 2018; van der Maaten &amp; Hinton 2008; McInnes et al. 2018), speech-pretrained encoders
+(Li et al. KBS 2020; Tran et al. IEEE RADAR 2020; Yessad et al. 2011), autoregressive Doppler
+estimation instead of the STFT (Kay &amp; Marple, Proc. IEEE 1981), window length tuned by AUC.</li>
+<li><span class="st done">FIXED</span><span class="pg">general</span>"Do not use word spectrogram":
+the term is now defined once in &sect;1.1 as the <b>micro-Doppler signature</b> and used as such in
+the abstracts, Ch1, Ch2, Ch5 and the flagged Ch3 spots; "spectrogram" remains only where the STFT
+object itself is meant (signal chain, storage format, gallery caption).</li>
+<li><span class="st done">FIXED</span><span class="pg">p. 12</span>"Review the wording of the whole
+document" &mdash; covered by the four read-through rounds and two review swarms above.</li>
+</ul>
+
+<h2>7 &middot; Round-4 swarm (5 Sep) &mdash; fresh 14-agent review of the recompiled PDF</h2>
+<p class="sub">Seven independent reviewers (front+Ch1&ndash;2, Ch3, Ch4, Ch5+annexes, layout
+&times;2, numbers/cross-references), each followed by an adversarial verifier that re-opened the
+sources and tried to refute every finding. 54 raw findings; 45 survived verification, 9 were
+rejected as taste or already-intentional. Slice ratings: 8&ndash;9 / 10 across the board; every
+reviewer judged the thesis at or near examiner-ready.</p>
+
+<h3>Applied immediately (verified factual defects)</h3>
+<ul>
+<li><span class="st done">FIXED</span><b>The one major:</b> &sect;3.5's group tests treat 348
+recordings as independent although each subject contributes ~6 &mdash; a caveat paragraph now
+states the p-values are optimistic, that they only describe the dataset, and that every claim
+rests on the subject-level protocol and subject-resampled intervals instead.</li>
+<li><span class="st done">FIXED</span>&sect;3.4 opener said "roughly 320 &times; 1000 values",
+contradicting Table 3.3's 320 &times; 12,000 &mdash; corrected.</li>
+<li><span class="st done">FIXED</span>Figure 3.5's Recording box said "9 s of walking" beside
+320 &times; 12,000 (= 7.5 s at the stated rate) &mdash; regenerated with 7.5 s.</li>
+<li><span class="st done">FIXED</span>32 = 25 + 7 bookkeeping: the excluded 7 now enumerated
+exactly (4 per-channel band means, 2 alternative ratio normalisations, 1 cross-channel mean
+ratio) and the excluded "Band means" row removed from Table 3.4, which now lists exactly the 25.</li>
+<li><span class="st done">FIXED</span>Window-weighting mechanism rephrased (the network never
+sees the count; long recordings dominated the training loss) and the caption's "factor of four"
+corrected to "more than a factor of three".</li>
+<li><span class="st done">FIXED</span>shape_clean screening rule now explicit in Table 3.7:
+rank correlation with duration &ge; 0.3, computed once over all recordings, duration only,
+never the diagnosis.</li>
+<li><span class="st done">FIXED</span>Inner loop completed: the 8 keep the pool's control-to-PD
+proportion with both classes guaranteed, and epoch ties break to the earliest.</li>
+<li><span class="st done">FIXED</span>Table 3.3 gained the missing Augmentation row (training
+only: Doppler flip + noise; test windows pass unchanged).</li>
+<li><span class="st done">FIXED</span>Table 4.7: ResNet-18 probe specificity 0.49 &rarr; 0.48
+(stored value 16/33 = 0.485; the prose already said 17 of 33 flagged).</li>
+<li><span class="st done">FIXED</span>Table 4.3 (the floors) now referenced from its own
+section's first sentence.</li>
+<li><span class="st done">FIXED</span>SVM below-chance footnote mechanism corrected: per-fold
+recalibration makes pooled scores incomparable across folds (nothing to "invert" inside a
+one-subject fold).</li>
+<li><span class="st done">FIXED</span>Table 4.6 names the architecture: all four ablation
+variants are SmallCNN re-runs (verified in the run configs).</li>
+<li><span class="st done">FIXED</span>"What the image models add over it is texture, not gait"
+hedged (Envelope-LSTM's CI contains both image-model AUCs) with a forward reference to the
+Chapter 5 attention analysis.</li>
+<li><span class="st done">FIXED</span>Ch1 "records no identifiable image" &rarr; "records no
+camera image" (the gait signature itself is biometric, as Ch2 proves).</li>
+<li><span class="st done">FIXED</span>Table 2.1 consistency: Gurbuz cell now "poorly to
+moderately" (matching the prose); Meral/Ozbilgin cell now claims radar unexplored "for
+subject-independent PD classification" (matching the thesis's hedged priority claim).</li>
+<li><span class="st done">FIXED</span>Annex A's "in the decision analysis" now names its
+source: the field's own network scored on unseen people (Section 5.1.2).</li>
+<li><span class="st done">FIXED</span>Acronyms: ACGAN and GAN added (used in Ch2), unused
+H&amp;Y and UPDRS removed, CI/CNN alphabetised.</li>
+<li><span class="st done">FIXED</span>Layout: blank unnumbered page before Annex A removed
+(\backmatter's cleardoublepage); List of Tables normalised to the List of Figures' convention
+(every table now has a period-free short title); &sect;4.1's stretched two-line heading given a
+manual break.</li>
+</ul>
+
+<h3>Confirmed but left for your call</h3>
+<ul>
+<li><span class="st done">FIXED</span><b>&sect;2.8 age row (done 9 Sep):</b> the "age-matched analysis is
+planned" sentence sits inside the adopted-safeguards list although age was never controlled.
+Proposed: move it out, state the metadata is absent, and add "an uncontrolled age confound can
+only inflate scores, so it cannot rescue a result already at the duration floor".</li>
+<li><span class="st open">OPEN</span><b>&sect;2.6 "only two of sixteen":</b> the denominator
+includes surveys and measurement-only studies where a validation protocol does not apply, and
+the two counted works (fard2026, park2016) are never described. Proposed: restate over
+classifier-evaluating works only, one sentence each for the two.</li>
+<li><span class="st open">OPEN</span><b>&sect;4.1.2 "test2 is the cleaner comparison":</b>
+promised as a carried consequence but no test2-only run exists. Proposed: soften to "motivates
+the turn-excluded ablation" + one sentence on why variant-restricted training was not run.</li>
+<li><span class="st open">OPEN</span><b>Conclusions O-tags:</b> the objective tags on
+conclusions 1&ndash;2 are loosely assigned (evaluation outcomes tagged O2/O3 rather than
+O1/O5).</li>
+<li><span class="st open">OPEN</span><b>Annex A ethics provenance:</b> no statement that the
+source data collection had ethics approval / informed consent &mdash; needs a check against the
+source paper before adding the sentence.</li>
+<li><span class="st open">OPEN</span><b>&sect;5.1.5 Fard et al.:</b> their pooled-vs-LOSO drop
+is asserted without numbers; add the figures or soften.</li>
+<li><span class="st open">OPEN</span>Future Work "recorded in sessions" &mdash; same as
+standing decision 1 (the word "sessions" is undefined in the thesis).</li>
+<li><span class="st open">OPEN</span>Ch1 "second most common neurodegenerative disorder"
+uncited &mdash; goes in the bibliography batch (add an epidemiology reference).</li>
+<li><span class="st open">OPEN</span>Front matter: the TOC entry "Resumen y Palabras Clave"
+hides the English Summary; abstracts' "an automated Timed-Up-and-Go test" could take
+"in effect" / "en la pr&aacute;ctica" (your call &mdash; you approved that wording).</li>
+<li><span class="st open">OPEN</span>Layout nits: Table 4.6 sits alone with white space on
+p. 47; committee-page banner heading stretch (school template style); Grad-CAM gallery tick
+labels small at print size and two gallery cells reuse windows of the same subject.</li>
+<li><span class="st open">OPEN</span>Annex B rounding nit: the total is exact only under
+full-precision carry of the 373,33 amortisation.</li>
+</ul>
+
+</div></body></html>

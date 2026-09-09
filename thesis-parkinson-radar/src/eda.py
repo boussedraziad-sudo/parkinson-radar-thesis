@@ -13,6 +13,8 @@ self-contained for the thesis.
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
@@ -26,7 +28,26 @@ from sklearn.preprocessing import StandardScaler
 from . import config as C
 from . import stats as S
 
-plt.rcParams.update({"figure.dpi": 120, "savefig.bbox": "tight", "font.size": 10})
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+import vizstyle as V  # noqa: E402
+
+V.apply()
+# These canvases are 11-15 in wide but print at ~0.92-0.95 \textwidth (16 cm),
+# a 0.40-0.53x reduction, so type is sized for the page: ~15 pt here is ~7-8 pt
+# on paper.
+plt.rcParams.update({
+    "figure.dpi": 120,
+    "savefig.bbox": "tight",
+    "font.size": 15,
+    "axes.titlesize": 17,
+    "axes.labelsize": 15,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "legend.fontsize": 14,
+})
+
+GROUP_LABELS = {"control": "Control", "pd": "PD"}
+GROUP_COLOURS = {"control": V.CONTROL, "pd": V.PD}
 
 
 # ---------------------------------------------------------------------------
@@ -39,18 +60,23 @@ def fig_class_balance(df: pd.DataFrame) -> dict:
     by_group = subj["group"].value_counts()
     tri = df.groupby("subject_id").size()
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4))
-    axes[0].bar(by_group.index, by_group.values,
-                color=[C.GROUP_COLOURS[g] for g in by_group.index])
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
+    axes[0].bar([GROUP_LABELS[g] for g in by_group.index], by_group.values,
+                color=[GROUP_COLOURS[g] for g in by_group.index])
     for i, v in enumerate(by_group.values):
-        axes[0].text(i, v + 0.3, str(v), ha="center", fontweight="bold")
-    axes[0].set_title(f"Subjects by group (N={subj.shape[0]})")
+        axes[0].text(i, v + 0.6, str(v), ha="center", fontweight="bold",
+                     fontsize=15, color=V.INK)
+    axes[0].set_title(f"Subjects by group (N={subj.shape[0]})", loc="left")
     axes[0].set_ylabel("subjects")
+    axes[0].grid(True, axis="y"); axes[0].grid(False, axis="x")
+    axes[0].margins(y=0.12)
 
-    axes[1].hist(tri.values, bins=range(4, 9), align="left", color="#888", edgecolor="white")
-    axes[1].set_title("Trials per subject")
+    axes[1].hist(tri.values, bins=range(4, 9), align="left", color=V.INK_3,
+                 edgecolor=V.SURFACE)
+    axes[1].set_title("Trials per subject", loc="left")
     axes[1].set_xlabel("n trials")
     axes[1].set_ylabel("subjects")
+    axes[1].grid(True, axis="y"); axes[1].grid(False, axis="x")
     fig.tight_layout()
     fig.savefig(C.FIGURES / "eda_class_balance.png")
     plt.close(fig)
@@ -64,25 +90,27 @@ def fig_class_balance(df: pd.DataFrame) -> dict:
 
 def fig_duration_confound(df: pd.DataFrame) -> dict:
     out = {}
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.5), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5.0), sharey=True)
     for ax, test in zip(axes, ["test1", "test2"]):
         sub = df[df["test"] == test]
         for g in ["control", "pd"]:
             v = sub.loc[sub["group"] == g, "duration_s"].dropna()
-            ax.hist(v, bins=20, alpha=0.65, label=f"{g} (n={v.size})",
-                    color=C.GROUP_COLOURS[g])
-            ax.axvline(v.median(), color=C.GROUP_COLOURS[g], ls="--", lw=1.5)
+            ax.hist(v, bins=20, alpha=0.65, label=f"{GROUP_LABELS[g]} (n={v.size})",
+                    color=GROUP_COLOURS[g])
+            ax.axvline(v.median(), color=GROUP_COLOURS[g], ls="--", lw=1.5)
         c = sub.loc[sub.group == "control", "duration_s"].dropna()
         p = sub.loc[sub.group == "pd", "duration_s"].dropna()
         u, pval = sps.mannwhitneyu(p, c, alternative="two-sided")
         delta = S.cliffs_delta(p.to_numpy(), c.to_numpy())
         gap = 100 * (p.median() - c.median()) / c.median()
-        ax.set_title(f"{test}: PD {gap:+.1f}% longer\nMWU p={pval:.1e}, δ={delta:+.2f}")
+        ax.set_title(f"{test}: PD {gap:+.1f}% longer\nMWU p={pval:.1e}, δ={delta:+.2f}",
+                     loc="left", fontsize=15)
         ax.set_xlabel("trial duration [s]")
-        ax.legend(fontsize=8)
+        ax.legend(fontsize=14)
         out[test] = {"pct_gap": float(gap), "mwu_p": float(pval), "cliffs_delta": float(delta)}
     axes[0].set_ylabel("trials")
-    fig.suptitle("Duration confound — PD trials run longer, concentrated in test1", y=1.02)
+    fig.suptitle("Duration confound: PD trials run longer, concentrated in test1",
+                 y=1.04, fontsize=18, fontweight="bold", color=V.INK)
     fig.savefig(C.FIGURES / "eda_duration_confound.png")
     plt.close(fig)
     return out
@@ -125,18 +153,20 @@ def fig_top_feature_distributions(df: pd.DataFrame, k: int = 6) -> dict:
     feats = [c for c in C.DURATION_INVARIANT_FEATURES if c in df.columns]
     table = S.group_comparison_table(df, feats)
     top = table.reindex(table["cliffs_delta"].abs().sort_values(ascending=False).index).head(k)
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+    fig, axes = plt.subplots(2, 3, figsize=(15, 9))
     for ax, (_, row) in zip(axes.flat, top.iterrows()):
         c = row["feature"]
         data = [df.loc[df.group == "control", c].dropna(),
                 df.loc[df.group == "pd", c].dropna()]
         parts = ax.violinplot(data, showmedians=True)
         for pc, g in zip(parts["bodies"], ["control", "pd"]):
-            pc.set_facecolor(C.GROUP_COLOURS[g]); pc.set_alpha(0.6)
-        ax.set_xticks([1, 2]); ax.set_xticklabels(["control", "pd"])
+            pc.set_facecolor(GROUP_COLOURS[g]); pc.set_alpha(0.6)
+        ax.set_xticks([1, 2]); ax.set_xticklabels(["Control", "PD"])
+        ax.tick_params(labelsize=17)
         ax.set_title(f"{c}\nδ={row['cliffs_delta']:+.2f} ({row['effect']}), "
-                     f"p_fdr={row['p_fdr']:.1e}", fontsize=9)
-    fig.suptitle("Top duration-invariant discriminators (trial-level)", y=1.01)
+                     f"p_fdr={row['p_fdr']:.1e}", fontsize=17)
+    fig.suptitle("Top duration-invariant discriminators (trial-level)", y=1.02,
+                 fontsize=20, fontweight="bold", color=V.INK)
     fig.tight_layout()
     fig.savefig(C.FIGURES / "eda_top_feature_distributions.png")
     plt.close(fig)
@@ -196,7 +226,7 @@ def fig_pca(df: pd.DataFrame) -> dict:
                         c=C.GROUP_COLOURS[g], label=g)
     axes[0].set_xlabel(f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}%)")
     axes[0].set_ylabel(f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}%)")
-    axes[0].legend(); axes[0].set_title("PCA — duration-invariant features")
+    axes[0].legend(); axes[0].set_title("PCA: duration-invariant features")
 
     cum = np.cumsum(pca.explained_variance_ratio_)
     axes[1].plot(range(1, len(cum) + 1), cum, "o-")

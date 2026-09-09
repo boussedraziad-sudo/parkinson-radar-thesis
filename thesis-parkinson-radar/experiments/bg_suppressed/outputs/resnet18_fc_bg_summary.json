@@ -1,0 +1,52 @@
+{
+  "summary": {
+    "subject_auc": 0.6860606060606061,
+    "balanced_accuracy": 0.6024242424242424,
+    "subject_f1": 0.6,
+    "threshold": 0.43103448275862066,
+    "confusion_matrix": [
+      [
+        16,
+        17
+      ],
+      [
+        7,
+        18
+      ]
+    ],
+    "n": 58,
+    "mean_epochs_run": 7.0,
+    "mean_best_epoch": 1.0,
+    "wall_clock_s": 947.8,
+    "trainable_params": 1026,
+    "pooled": 0.6860606060606061,
+    "ci": [
+      0.539,
+      0.824
+    ],
+    "batch_A": 0.49583333333333335,
+    "n_batch_A": 34,
+    "batch_B": 0.6814814814814815,
+    "n_batch_B": 24,
+    "corr_nwin": 0.06572634149951823
+  },
+  "config": {
+    "epochs": 20,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 32,
+    "patience": 5,
+    "inner_val_subjects": 8,
+    "channel_mode": "both",
+    "augment_train": true,
+    "aug_doppler_flip": true,
+    "aug_noise_std": 0.1,
+    "aug_mask_frac": 0.15,
+    "class_balance": true,
+    "window_weighting": true,
+    "max_turn_frac": null,
+    "num_workers": 0,
+    "seed": 1337,
+    "device": "mps"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "reference_v2": {
+    "smallcnn_v2": {
+      "pooled": 0.6158,
+      "batch_A": 0.4208,
+      "batch_B": 0.3481,
+      "corr_nwin": 0.047
+    },
+    "resnet18_fc_v2": {
+      "pooled": 0.6545,
+      "batch_A": 0.4583,
+      "batch_B": 0.5407,
+      "corr_nwin": 0.081
+    },
+    "batch label alone": {
+      "pooled": 0.664
+    }
+  },
+  "smallcnn_bg": {
+    "pooled": 0.6242424242424243,
+    "ci": [
+      0.471,
+      0.768
+    ],
+    "n": 58,
+    "batch_A": 0.5166666666666666,
+    "batch_B": 0.3111111111111111,
+    "n_batch_A": 34,
+    "n_batch_B": 24,
+    "corr_nwin": 0.06260494139911074,
+    "balanced_accuracy": 0.6133333333333333,
+    "wall_clock_s": 900.0
+  },
+  "resnet18_fc_bg": {
+    "pooled": 0.6860606060606061,
+    "ci": [
+      0.539,
+      0.824
+    ],
+    "n": 58,
+    "batch_A": 0.49583333333333335,
+    "batch_B": 0.6814814814814815,
+    "n_batch_A": 34,
+    "n_batch_B": 24,
+    "corr_nwin": 0.06572634149951823,
+    "balanced_accuracy": 0.6024242424242424,
+    "wall_clock_s": 947.8
+  }
+}
